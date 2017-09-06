@@ -18,7 +18,7 @@
 
     <!-- Custom styles for this template -->
     <link href="css/sb-admin.css" rel="stylesheet">
-    
+
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/png" href="img/shopping-icon.png"/>
   </head>
@@ -32,9 +32,7 @@
 
         <!-- Breadcrumbs -->
         <ol class="breadcrumb">
-            <li class="breadcrumb-item active">
-              <a href="index.php">Meu Mercado</a>
-            </li>
+            <li class="breadcrumb-item active">Meu Mercado</li>
         </ol>
  
         <!--content-->
