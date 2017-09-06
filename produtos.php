@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Cadastro de Produto</title>
+    <title>Produtos</title>
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -15,6 +15,8 @@
 
     <!-- Plugin CSS -->
     <link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+    <link href="css/remodal.css" rel="stylesheet" type="text/css">
+    <link href="css/remodal-default-theme.css" rel="stylesheet" type="text/css">
 
     <!-- Custom styles for this template -->
     <link href="css/sb-admin.css" rel="stylesheet">
@@ -35,8 +37,116 @@
           <li class="breadcrumb-item"><a href="index.php">Meu Mercado</a></li>
           <li class="breadcrumb-item active">Cadastrar Produtos</li>
         </ol>
- 
+
         <div class="col-md-12">
+          <a class="btn btn-success btnCreate" href="#editModal"><i class="fa fa-plus" aria-hidden="true"></i> Adicionar</a>
+          
+          <label>Nome</label>
+          <input type="radio" name="produtoPesquisa">
+          <label>Tipo</label>
+          <input type="radio" name="produtoPesquisa">
+          
+          <br><br>
+          
+          <table id="dataTable" class="table table-bordered" width="100%" id="dataTable" cellspacing="0">
+            <thead>
+              <tr>
+                <th width="50px">Código</th>
+                <th>Nome</th>
+                <th>Tipo</th>
+                <th>Valor</th>
+                <th>Estoque</th>
+                <th width="50px">Gerenciar</th>
+              </tr>
+            </thead>
+            <tfoot>
+              <tr>
+                <th>Código</th>
+                <th>Nome</th>
+                <th>Tipo</th>
+                <th>Valor</th>
+                <th>Estoque</th>
+                <th>Gerenciar</th>
+              </tr>
+            </tfoot>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Itaipava</td>
+                <td>Cerveja</td>
+                <td>1,50</td>
+                <td>200</td>
+                <td class="text-center">
+                  <i class="fa fa-pencil" aria-hidden="true"></i>
+                  <i class="fa fa-trash" aria-hidden="true"></i>
+                </td>
+              </tr>
+
+              <tr>
+                <td>2</td>
+                <td>Skol</td>
+                <td>Cerveja</td>
+                <td>1,70</td>
+                <td>300</td>
+                <td class="text-center">
+                  <i class="fa fa-pencil" aria-hidden="true"></i>
+                  <i class="fa fa-trash" aria-hidden="true"></i>
+                </td>
+              </tr>
+
+              <tr>
+                <td>3</td>
+                <td>Del Vale</td>
+                <td>Suco</td>
+                <td>2,10</td>
+                <td>100</td>
+                <td class="text-center">
+                  <i class="fa fa-pencil" aria-hidden="true"></i>
+                  <i class="fa fa-trash" aria-hidden="true"></i>
+                </td>
+              </tr>
+
+              <tr>
+                <td>4</td>
+                <td>Pepsi Cola 2L</td>
+                <td>Refrigerante</td>
+                <td>3,00</td>
+                <td>800</td>
+                <td class="text-center">
+                  <i class="fa fa-pencil" aria-hidden="true"></i>
+                  <i class="fa fa-trash" aria-hidden="true"></i>
+                </td>
+              </tr>
+
+              <tr>
+                <td>5</td>
+                <td>Guaraná Charrua 2L</td>
+                <td>Refrigerante</td>
+                <td>2,50</td>
+                <td>340</td>
+                <td class="text-center">
+                  <i class="fa fa-pencil" aria-hidden="true"></i>
+                  <i class="fa fa-trash" aria-hidden="true"></i>
+                </td>
+              </tr>
+
+              <tr>
+                <td>6</td>
+                <td>Bis Branco</td>
+                <td>Chocolate</td>
+                <td>2,70</td>
+                <td>50</td>
+                <td class="text-center">
+                  <i class="fa fa-pencil" aria-hidden="true"></i>
+                  <i class="fa fa-trash" aria-hidden="true"></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+ 
+        <div class="remodal" data-remodal-id="editModal">
+          <button data-remodal-action="close" class="remodal-close"></button>
           <form id="produtoCadastro" class="well form-horizontal" method="post">
             <fieldset>
               <legend class="text-center">Cadastrar Produto</legend>
@@ -97,6 +207,25 @@
       </div>
     </div>
 
+    <div class="remodal" data-remodal-id="deleteModal">
+      <form action="produtos.php#alertModal" method="post">
+        <input type="hidden" name="jogoID" value="">
+        <button data-remodal-action="close" class="remodal-close"></button>
+        <h2>Deseja deletar este produto?</h2>
+        <p class="deleteProduto"></p>
+        <br>
+        <button data-remodal-action="cancel" class="remodal-cancel">Não</button>
+        <button type="submit" class="remodal-confirm">Sim</button>
+      </form>
+    </div>
+
+    <div class="remodal" data-remodal-id="alertModal">
+      <button data-remodal-action="close" class="remodal-close"></button>
+      <h2><?php echo $alertMessage; ?></h2>
+      <br>
+      <button data-remodal-action="confirm" class="remodal-confirm">OK</button>
+    </div>
+
     <?php include ('includes/footer.html') ?>
 
     <!-- Bootstrap core JavaScript -->
@@ -110,12 +239,24 @@
     <script src="vendor/datatables/dataTables.bootstrap4.js"></script>
     <script src="js/jquery.mask.min.js"></script>
     <script src="js/bootstrapValidator.min.js"></script>
+    <script src="js/remodal.js"></script>
 
     <!-- Custom scripts for this template -->
     <script src="js/sb-admin.js"></script>
 
     <script>
       $(document).ready(function(){
+
+        $("#dataTable").DataTable({
+          "language": {
+            "url": "json/Portuguese-Brasil.json"
+          },
+          "aoColumnDefs": [
+            { "bSearchable": false, "aTargets": [ 0, 3, 4, 5 ] },
+            { "bSortable": false, "aTargets": [ 5 ] }
+          ]
+        });
+
         $('#produtoCadastro').bootstrapValidator({
           // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
           feedbackIcons: {
