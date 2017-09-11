@@ -25,9 +25,90 @@
     <link rel="shortcut icon" type="image/png" href="img/shopping-icon.png"/>  
   </head>
 
+  <?php
+    include ("includes/dbconnect.php");
+    $alertMessage = "";
+
+    if (isset($_POST['produtoNome']))
+    {
+      if ($_POST['produtoID'] > 0) //edit
+      {
+        $produtoID = $_POST['produtoID'];
+        $produtoNome = $_POST['produtoNome'];
+        $produtoTipo = $_POST['produtoTipo'];
+        $produtoValor = $_POST['produtoValor'];
+        $produtoEstoque = $_POST['produtoEstoque'];
+
+        $produtoValor = str_replace(",", ".", $produtoValor);
+
+        $consulta = $conexao->prepare("UPDATE produtos SET Nome = ?, Tipo = ?, Valor = ?, Estoque = ? WHERE ID = ?");
+        $consulta->execute(array($produtoNome, $produtoTipo, $produtoValor, $produtoEstoque, $produtoID));
+        $resultado = $consulta->rowCount();
+        
+        if ($resultado == 0)
+        {
+          $alertMessage = "Falha ao atualizar o registro.";
+        }
+        else
+        {
+          $alertMessage = "Registro atualizado com sucesso!";
+        }
+      }
+      else //insert
+      {
+        $produtoNome = $_POST['produtoNome'];
+        $produtoTipo = $_POST['produtoTipo'];
+        $produtoValor = $_POST['produtoValor'];
+        $produtoEstoque = $_POST['produtoEstoque'];
+
+        $produtoValor = str_replace(",", ".", $produtoValor);
+
+        $consulta = $conexao->prepare("INSERT INTO produtos (Nome, Tipo, Valor, Estoque) VALUES (?,?,?,?)");
+        $consulta->execute(array($produtoNome, $produtoTipo, $produtoValor, $produtoEstoque));
+        $resultado = $consulta->rowCount();
+
+        if ($resultado == 0)
+        {
+          $alertMessage = "Falha ao inserir o novo registro.";
+        }
+        else
+        {
+          $alertMessage = "Registro inserido com sucesso!";
+        }
+      }
+    }
+    elseif (isset($_POST['produtoID'])) //delete
+    {
+      $produtoID = $_POST['produtoID'];
+
+      $consulta = $conexao->prepare("DELETE FROM produtos WHERE ID = ?");
+      $consulta->execute(array($produtoID));
+      $resultado = $consulta->rowCount();
+
+      if ($resultado == 0)
+      {
+        $alertMessage = "Falha ao deletar o registro!";
+      }
+      else
+      {
+        $alertMessage = "Registro deletado com sucesso!";
+      }
+    }
+
+    //read
+    $consulta = $conexao->prepare("SELECT produtos.ID, produtos.Nome, produtos.Tipo as TipoID, tipos.Nome AS Tipo, produtos.Valor, produtos.Estoque FROM produtos JOIN tipos on produtos.Tipo = tipos.ID");
+    $consulta->execute();
+    $registros = $consulta->fetchAll();
+
+    //tipos
+    $consulta = $conexao->prepare("SELECT * FROM tipos");
+    $consulta->execute();
+    $tipos = $consulta->fetchAll();
+  ?>
+
   <body class="fixed-nav sticky-footer bg-dark" id="page-top">
 
-    <?php include ('includes/menu.html') ?>
+    <?php include ('includes/menu.html'); ?>
 
     <div class="content-wrapper">
       <div class="container-fluid">
@@ -41,10 +122,11 @@
         <div class="col-md-12">
           <a class="btn btn-success btnCreate" href="#editModal"><i class="fa fa-plus" aria-hidden="true"></i> Adicionar</a>
           
+          <!--
           <label>Nome</label>
           <input type="radio" name="produtoPesquisa">
           <label>Tipo</label>
-          <input type="radio" name="produtoPesquisa">
+          <input type="radio" name="produtoPesquisa">-->
           
           <br><br>
           
@@ -59,6 +141,7 @@
                 <th width="50px">Gerenciar</th>
               </tr>
             </thead>
+
             <tfoot>
               <tr>
                 <th>Código</th>
@@ -69,87 +152,35 @@
                 <th>Gerenciar</th>
               </tr>
             </tfoot>
+
             <tbody>
-              <tr>
-                <td>1</td>
-                <td>Itaipava</td>
-                <td>Cerveja</td>
-                <td>1,50</td>
-                <td>200</td>
-                <td class="text-center">
-                  <i class="fa fa-pencil" aria-hidden="true"></i>
-                  <i class="fa fa-trash" aria-hidden="true"></i>
-                </td>
-              </tr>
-
-              <tr>
-                <td>2</td>
-                <td>Skol</td>
-                <td>Cerveja</td>
-                <td>1,70</td>
-                <td>300</td>
-                <td class="text-center">
-                  <i class="fa fa-pencil" aria-hidden="true"></i>
-                  <i class="fa fa-trash" aria-hidden="true"></i>
-                </td>
-              </tr>
-
-              <tr>
-                <td>3</td>
-                <td>Del Vale</td>
-                <td>Suco</td>
-                <td>2,10</td>
-                <td>100</td>
-                <td class="text-center">
-                  <i class="fa fa-pencil" aria-hidden="true"></i>
-                  <i class="fa fa-trash" aria-hidden="true"></i>
-                </td>
-              </tr>
-
-              <tr>
-                <td>4</td>
-                <td>Pepsi Cola 2L</td>
-                <td>Refrigerante</td>
-                <td>3,00</td>
-                <td>800</td>
-                <td class="text-center">
-                  <i class="fa fa-pencil" aria-hidden="true"></i>
-                  <i class="fa fa-trash" aria-hidden="true"></i>
-                </td>
-              </tr>
-
-              <tr>
-                <td>5</td>
-                <td>Guaraná Charrua 2L</td>
-                <td>Refrigerante</td>
-                <td>2,50</td>
-                <td>340</td>
-                <td class="text-center">
-                  <i class="fa fa-pencil" aria-hidden="true"></i>
-                  <i class="fa fa-trash" aria-hidden="true"></i>
-                </td>
-              </tr>
-
-              <tr>
-                <td>6</td>
-                <td>Bis Branco</td>
-                <td>Chocolate</td>
-                <td>2,70</td>
-                <td>50</td>
-                <td class="text-center">
-                  <i class="fa fa-pencil" aria-hidden="true"></i>
-                  <i class="fa fa-trash" aria-hidden="true"></i>
-                </td>
-              </tr>
+              <?php
+                foreach ($registros as $key => $value)
+                {
+                  echo "<tr>";
+                  echo  "<td class='produtoID' data-id='" . $value['ID'] . "'>" . $value['ID'] . "</td>";
+                  echo  "<td class='produtoNome'>" . $value['Nome'] . "</td>";
+                  echo  "<td class='produtoTipo' data-tipo='" . $value['TipoID'] . "'>" . $value['Tipo'] . "</td>";
+                  echo  "<td class='produtoValor'>" . $value['Valor'] . "</td>";
+                  echo  "<td class='produtoEstoque'>" . $value['Estoque'] . "</td>";
+                  echo  "<td class='text-center'>";
+                  echo    "<a href='#editModal' class='btnEdit'><i class='fa fa-pencil' aria-hidden='true'></i></a> ";
+                  echo    "<a href='#deleteModal' class='btnDelete'><i class='fa fa-trash' aria-hidden='true'></i></a>";
+                  echo  "</td>";
+                  echo "</tr>";
+                }
+              ?>
             </tbody>
           </table>
         </div>
  
         <div class="remodal" data-remodal-id="editModal">
           <button data-remodal-action="close" class="remodal-close"></button>
-          <form id="produtoCadastro" class="well form-horizontal" method="post">
+          <form action="produtos.php#alertModal" id="produtoCadastro" class="well form-horizontal" method="post">
             <fieldset>
-              <legend class="text-center">Cadastrar Produto</legend>
+              <legend id="modalTitle" class="text-center">Cadastrar Produto</legend>
+
+              <input type="hidden" name="produtoID" value="">
 
               <div class="form-group">
                 <label class="col-md-12">Nome</label>  
@@ -168,9 +199,12 @@
                     <span class="input-group-addon"><i class="fa fa-list-alt" aria-hidden="true"></i></span>
                     <select name="produtoTipo" class="form-control selectpicker">
                       <option value=" ">Selecione o Tipo</option>
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
+                      <?php
+                        foreach($tipos as $key => $value)
+                        {
+                          echo "<option value='" . $value['ID'] . "'>" . $value['Nome'] . "</option>";
+                        }
+                      ?>
                     </select>
                   </div>
                 </div>
@@ -209,7 +243,7 @@
 
     <div class="remodal" data-remodal-id="deleteModal">
       <form action="produtos.php#alertModal" method="post">
-        <input type="hidden" name="jogoID" value="">
+        <input type="hidden" name="produtoID" value="">
         <button data-remodal-action="close" class="remodal-close"></button>
         <h2>Deseja deletar este produto?</h2>
         <p class="deleteProduto"></p>
@@ -226,7 +260,7 @@
       <button data-remodal-action="confirm" class="remodal-confirm">OK</button>
     </div>
 
-    <?php include ('includes/footer.html') ?>
+    <?php include ('includes/footer.html'); ?>
 
     <!-- Bootstrap core JavaScript -->
     <script src="vendor/jquery/jquery.min.js"></script>
@@ -319,6 +353,44 @@
         });
 
         $("#produtoValor").mask("00.000,00", {reverse: true});
+
+        $(".btnCreate").click(function() {
+          $("#modalTitle").text("Cadastrar Produto");
+
+          $("input[name='produtoID']").val("");
+          $("input[name='produtoNome']").val("");
+          $("select[name='produtoTipo'] option").removeAttr("selected");
+          $("option[value=' ']").attr("selected", "selected");
+          $("input[name='produtoValor']").val("");
+          $("input[name='produtoEstoque']").val("");
+        });
+        
+        $(".btnEdit").click(function() {
+          $("#modalTitle").text("Editar Produto");
+
+          var $item = $(this).closest("tr");
+          var produtoID = $($item).find(".produtoID").data("id");
+          var produtoNome = $($item).find(".produtoNome").html();
+          var produtoTipo = $($item).find(".produtoTipo").data("tipo");
+          var produtoValor = $($item).find(".produtoValor").html();
+          var produtoEstoque = $($item).find(".produtoEstoque").html();
+          
+          $("input[name='produtoID']").val(produtoID);
+          $("input[name='produtoNome']").val(produtoNome);
+          $("select[name='produtoTipo'] option").removeAttr("selected");
+          $("option[value='" + produtoTipo + "']").attr("selected", "selected");
+          $("select[name='produtoTipo']").val(produtoTipo);
+          $("input[name='produtoValor']").val(produtoValor);
+          $("input[name='produtoEstoque']").val(produtoEstoque);
+        });
+        
+        $(".btnDelete").click(function() {
+          var $item = $(this).closest("tr");
+          var produtoID = $($item).find(".produtoID").data("id");
+          var produtoNome = $($item).find(".produtoNome").html();
+          $("input[name='produtoID']").val(produtoID);
+          $(".deleteProduto").empty().append(produtoNome);
+        });
       });
     </script>
   </body>
