@@ -1,3 +1,12 @@
+<?php
+  session_start();
+
+  /*if (!isset($_SESSION['usuarioID']) != "")
+  {
+    header("Location: login.php");
+  }*/
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -108,7 +117,7 @@
 
   <body class="fixed-nav sticky-footer bg-dark" id="page-top">
 
-    <?php include ('includes/menu.html'); ?>
+    <?php include ('includes/menu.php'); ?>
 
     <div class="content-wrapper">
       <div class="container-fluid">
@@ -120,14 +129,11 @@
         </ol>
 
         <div class="col-md-12">
-          <a class="btn btn-success btnCreate" href="#editModal"><i class="fa fa-plus" aria-hidden="true"></i> Adicionar</a>
-          
-          <!--
-          <label>Nome</label>
-          <input type="radio" name="produtoPesquisa">
-          <label>Tipo</label>
-          <input type="radio" name="produtoPesquisa">-->
-          
+          <a class="btn btn-success btnCreate" <?php echo "href='" . (isset($_SESSION['usuarioID']) != "" ? "#editModal" : "login.php") . "'"; ?> >
+            <i class="fa fa-plus" aria-hidden="true"></i> 
+            Adicionar
+          </a>
+                  
           <br><br>
           
           <table id="dataTable" class="table table-bordered" width="100%" id="dataTable" cellspacing="0">
@@ -164,14 +170,16 @@
                   echo  "<td class='produtoValor'>" . $value['Valor'] . "</td>";
                   echo  "<td class='produtoEstoque'>" . $value['Estoque'] . "</td>";
                   echo  "<td class='text-center'>";
-                  echo    "<a href='#editModal' class='btnEdit'><i class='fa fa-pencil' aria-hidden='true'></i></a> ";
-                  echo    "<a href='#deleteModal' class='btnDelete'><i class='fa fa-trash' aria-hidden='true'></i></a>";
+                  echo    "<a href='" . (isset($_SESSION['usuarioID']) != "" ? "#editModal" : "login.php") . "' class='btnEdit'><i class='fa fa-pencil' aria-hidden='true'></i></a> ";
+                  echo    "<a href='" . (isset($_SESSION['usuarioID']) != "" ? "#deleteModal" : "login.php") . "' class='btnDelete'><i class='fa fa-trash' aria-hidden='true'></i></a>";
                   echo  "</td>";
                   echo "</tr>";
                 }
               ?>
             </tbody>
           </table>
+
+          <br>
         </div>
  
         <div class="remodal" data-remodal-id="editModal">

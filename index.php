@@ -1,3 +1,7 @@
+<?php
+    session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -25,7 +29,7 @@
 
   <body class="fixed-nav sticky-footer bg-dark" id="page-top">
 
-    <?php include ('includes/menu.html'); ?>
+    <?php include ('includes/menu.php'); ?>
 
     <div class="content-wrapper">
       <div class="container-fluid">
