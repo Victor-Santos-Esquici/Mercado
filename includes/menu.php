@@ -6,14 +6,6 @@
 
   <div class="collapse navbar-collapse" id="navbarResponsive">
     <ul class="navbar-nav navbar-sidenav">
-
-      <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Charts">
-        <a class="nav-link" href="produtos.php">
-          <i class="fa fa-fw fa-shopping-cart"></i>
-          <span class="nav-link-text">Produtos</span>
-        </a>
-      </li>
-
       <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Produtos">
         <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseComponents">
           <i class="fa fa-fw fa-shopping-cart"></i>
@@ -21,7 +13,7 @@
         </a>
         <ul class="sidenav-second-level collapse" id="collapseComponents">
           <li>
-            <a href="static-nav.html">Gerenciar Produtos</a>
+            <a href="produtos.php">Gerenciar Produtos</a>
           </li>
           <li>
             <a href="tipos.php">Gerenciar Tipos</a>

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.1
+-- version 4.4.14
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 06-Set-2017 às 05:01
--- Versão do servidor: 10.1.9-MariaDB
--- PHP Version: 5.6.15
+-- Generation Time: 16-Set-2017 às 01:34
+-- Versão do servidor: 5.6.26
+-- PHP Version: 5.5.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -26,13 +26,13 @@ SET time_zone = "+00:00";
 -- Estrutura da tabela `produtos`
 --
 
-CREATE TABLE `produtos` (
-  `ID` int(6) UNSIGNED NOT NULL,
+CREATE TABLE IF NOT EXISTS `produtos` (
+  `ID` int(6) unsigned NOT NULL,
   `Nome` varchar(50) NOT NULL,
-  `Tipo` int(6) UNSIGNED NOT NULL,
+  `Tipo` int(6) unsigned NOT NULL,
   `Valor` decimal(15,2) NOT NULL,
-  `Estoque` int(6) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `Estoque` int(6) unsigned NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `produtos`
@@ -52,10 +52,10 @@ INSERT INTO `produtos` (`ID`, `Nome`, `Tipo`, `Valor`, `Estoque`) VALUES
 -- Estrutura da tabela `tipos`
 --
 
-CREATE TABLE `tipos` (
-  `ID` int(6) UNSIGNED NOT NULL,
+CREATE TABLE IF NOT EXISTS `tipos` (
+  `ID` int(6) unsigned NOT NULL,
   `Nome` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `tipos`
@@ -66,6 +66,25 @@ INSERT INTO `tipos` (`ID`, `Nome`) VALUES
 (2, 'Suco'),
 (3, 'Refrigerante'),
 (4, 'Chocolate');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `usuarios`
+--
+
+CREATE TABLE IF NOT EXISTS `usuarios` (
+  `ID` int(6) unsigned NOT NULL,
+  `Login` varchar(50) NOT NULL,
+  `Senha` varchar(50) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `usuarios`
+--
+
+INSERT INTO `usuarios` (`ID`, `Login`, `Senha`) VALUES
+(1, 'admin', 'admin');
 
 --
 -- Indexes for dumped tables
@@ -85,6 +104,12 @@ ALTER TABLE `tipos`
   ADD PRIMARY KEY (`ID`);
 
 --
+-- Indexes for table `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD PRIMARY KEY (`ID`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -92,12 +117,17 @@ ALTER TABLE `tipos`
 -- AUTO_INCREMENT for table `produtos`
 --
 ALTER TABLE `produtos`
-  MODIFY `ID` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `ID` int(6) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `tipos`
 --
 ALTER TABLE `tipos`
-  MODIFY `ID` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `ID` int(6) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT for table `usuarios`
+--
+ALTER TABLE `usuarios`
+  MODIFY `ID` int(6) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- Constraints for dumped tables
 --
