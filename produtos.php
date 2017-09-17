@@ -48,7 +48,9 @@
         $produtoValor = $_POST['produtoValor'];
         $produtoEstoque = $_POST['produtoEstoque'];
 
+        $produtoValor = str_replace(".", "", $produtoValor);
         $produtoValor = str_replace(",", ".", $produtoValor);
+        print_r($produtoValor);
 
         $consulta = $conexao->prepare("UPDATE produtos SET Nome = ?, Tipo = ?, Valor = ?, Estoque = ? WHERE ID = ?");
         $consulta->execute(array($produtoNome, $produtoTipo, $produtoValor, $produtoEstoque, $produtoID));
@@ -75,7 +77,9 @@
         $produtoValor = $_POST['produtoValor'];
         $produtoEstoque = $_POST['produtoEstoque'];
 
+        $produtoValor = str_replace(".", "", $produtoValor);
         $produtoValor = str_replace(",", ".", $produtoValor);
+        $produtoEstoque = str_replace(".", "", $produtoEstoque);
 
         $consulta = $conexao->prepare("INSERT INTO produtos (Nome, Tipo, Valor, Estoque) VALUES (?,?,?,?)");
         $consulta->execute(array($produtoNome, $produtoTipo, $produtoValor, $produtoEstoque));
@@ -241,7 +245,7 @@
                 <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
                   <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-shopping-cart" aria-hidden="true"></i></span>
-                    <input name="produtoEstoque" placeholder="50" class="form-control" type="text">
+                    <input id="produtoEstoque" name="produtoEstoque" placeholder="50" class="form-control" type="text">
                   </div>
                 </div>
               </div>
@@ -368,7 +372,14 @@
           }, 'json');
         });
 
+        //inputs
         $("#produtoValor").mask("00.000,00", {reverse: true});
+        $("#produtoEstoque").mask("000.000", {reverse: true});
+        
+        //fields
+        $(".produtoValor").mask("00.000,00", {reverse: true});
+        $(".produtoEstoque").mask("000.000", {reverse: true});
+
 
         $(".btnCreate").click(function() {
           $("#modalTitle").text("Cadastrar Produto");
