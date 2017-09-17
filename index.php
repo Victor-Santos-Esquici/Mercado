@@ -3,7 +3,7 @@
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -19,6 +19,8 @@
 
     <!-- Plugin CSS -->
     <link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+    <link href="css/remodal.css" rel="stylesheet" type="text/css">
+    <link href="css/remodal-default-theme.css" rel="stylesheet" type="text/css">
 
     <!-- Custom styles for this template -->
     <link href="css/sb-admin.css" rel="stylesheet">
@@ -40,8 +42,16 @@
         </ol>
  
         <!--content-->
+        <input type="hidden" name="alertMessage" value="<?php echo $alert ?>">
 
       </div>
+    </div>
+
+    <div class="remodal" data-remodal-id="alertModal">
+      <button data-remodal-action="close" class="remodal-close"></button>
+      <h2>Aviso!</h2>
+      <p>Você precisa estar logado para gerenciar.</p>
+      <button data-remodal-action="confirm" class="remodal-confirm">OK</button>
     </div>
 
     <?php include ('includes/footer.html'); ?>
@@ -55,6 +65,7 @@
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="vendor/datatables/jquery.dataTables.js"></script>
     <script src="vendor/datatables/dataTables.bootstrap4.js"></script>
+    <script src="js/remodal.js"></script>
 
     <!-- Custom scripts for this template -->
     <script src="js/sb-admin.js"></script>

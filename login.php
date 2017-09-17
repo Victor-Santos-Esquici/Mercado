@@ -1,5 +1,9 @@
+<?php
+  session_start();
+?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -24,11 +28,9 @@
   </head>
 
   <?php
-    session_start();
-
     if (isset($_SESSION['usuarioID']) != "")
     {
-      header("Location: produtos.php");
+      header("Location: index.php");
     }
 
     $loginError = 0;
@@ -52,7 +54,7 @@
           {
             $_SESSION['usuarioID'] = $value['ID'];
             $_SESSION['usuarioLogin'] = $value['Login'];
-            header("Location: produtos.php");
+            header("Location: index.php");
           }
           else
           {

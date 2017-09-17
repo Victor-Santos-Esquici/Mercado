@@ -438,3 +438,24 @@ small {
   padding-right: 42.5px;
 }
 
+.btnCreate {
+  margin-left: 1rem;
+}
+
+.btnEdit i, .btnDelete i {
+  font-size: 20px;
+  margin-right: 3px;
+  margin-left: 3px;
+}
+
+.btnDelete i {
+  color: #d9534f;
+}
+
+.btnEdit i {
+  color: #ffc107;
+}
+
+.btn.disabled {
+  pointer-events: auto !important;
+}

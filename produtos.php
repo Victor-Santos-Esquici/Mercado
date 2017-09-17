@@ -1,14 +1,9 @@
 <?php
   session_start();
-
-  /*if (!isset($_SESSION['usuarioID']) != "")
-  {
-    header("Location: login.php");
-  }*/
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -42,6 +37,11 @@
     {
       if ($_POST['produtoID'] > 0) //edit
       {
+        if (!isset($_SESSION['usuarioID']) != "")
+        {
+          header("Location: index.php#alertModal");
+        }
+
         $produtoID = $_POST['produtoID'];
         $produtoNome = $_POST['produtoNome'];
         $produtoTipo = $_POST['produtoTipo'];
@@ -65,6 +65,11 @@
       }
       else //insert
       {
+        if (!isset($_SESSION['usuarioID']) != "")
+        {
+          header("Location: index.php#alertModal");
+        }
+
         $produtoNome = $_POST['produtoNome'];
         $produtoTipo = $_POST['produtoTipo'];
         $produtoValor = $_POST['produtoValor'];
@@ -88,6 +93,11 @@
     }
     elseif (isset($_POST['produtoID'])) //delete
     {
+      if (!isset($_SESSION['usuarioID']) != "")
+      {
+        header("Location: index.php#alertModal");
+      }
+      
       $produtoID = $_POST['produtoID'];
 
       $consulta = $conexao->prepare("DELETE FROM produtos WHERE ID = ?");
@@ -129,12 +139,11 @@
         </ol>
 
         <div class="col-md-12">
-          <a class="btn btn-success btnCreate" <?php echo "href='" . (isset($_SESSION['usuarioID']) != "" ? "#editModal" : "login.php") . "'"; ?> >
-            <i class="fa fa-plus" aria-hidden="true"></i> 
-            Adicionar
+          <a class="btn btn-success form-group btnCreate" <?php echo (isset($_SESSION['usuarioID']) != "" ? "href='#editModal'" : "href='login.php' data-toggle='tooltip' title='Você precisa estar logado para cadastrar.'"); ?>>
+            <span><i class="fa fa-plus" aria-hidden="true"></i> Adicionar</span>
           </a>
                   
-          <br><br>
+          <br>
           
           <table id="dataTable" class="table table-bordered" width="100%" id="dataTable" cellspacing="0">
             <thead>
@@ -170,15 +179,14 @@
                   echo  "<td class='produtoValor'>" . $value['Valor'] . "</td>";
                   echo  "<td class='produtoEstoque'>" . $value['Estoque'] . "</td>";
                   echo  "<td class='text-center'>";
-                  echo    "<a href='" . (isset($_SESSION['usuarioID']) != "" ? "#editModal" : "login.php") . "' class='btnEdit'><i class='fa fa-pencil' aria-hidden='true'></i></a> ";
-                  echo    "<a href='" . (isset($_SESSION['usuarioID']) != "" ? "#deleteModal" : "login.php") . "' class='btnDelete'><i class='fa fa-trash' aria-hidden='true'></i></a>";
+                  echo    "<a " . (isset($_SESSION['usuarioID']) != "" ? "href='#editModal'" : "href='login.php' data-toggle='tooltip' data-placement='left' title='Você precisa estar logado para editar.'") . " class='btnEdit'><i class='fa fa-pencil' aria-hidden='true'></i></a> ";
+                  echo    "<a " . (isset($_SESSION['usuarioID']) != "" ? "href='#deleteModal'" : "href='login.php' data-toggle='tooltip' data-placement='left' title='Você precisa estar logado para deletar.'") . " class='btnDelete'><i class='fa fa-trash' aria-hidden='true'></i></a>";
                   echo  "</td>";
                   echo "</tr>";
                 }
               ?>
             </tbody>
           </table>
-
           <br>
         </div>
  
@@ -186,7 +194,7 @@
           <button data-remodal-action="close" class="remodal-close"></button>
           <form action="produtos.php#alertModal" id="produtoCadastro" class="well form-horizontal" method="post">
             <fieldset>
-              <legend id="modalTitle" class="text-center">Cadastrar Produto</legend>
+              <legend id="modalTitle" class="text-center">Gerenciar Produtos</legend>
 
               <input type="hidden" name="produtoID" value="">
 
