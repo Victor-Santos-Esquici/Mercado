@@ -20,6 +20,13 @@
           </li>
         </ul>
       </li>
+
+      <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Vendas">
+        <a class="nav-link" href="vendas.php">
+          <i class="fa fa-fw fa-money"></i>
+          <span class="nav-link-text">Vendas</span>
+        </a>
+      </li>
     </ul>
 
     <ul class="navbar-nav sidenav-toggler">

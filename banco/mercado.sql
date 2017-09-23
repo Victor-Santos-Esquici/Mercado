@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 17-Set-2017 às 04:57
+-- Generation Time: 23-Set-2017 às 22:43
 -- Versão do servidor: 10.1.9-MariaDB
 -- PHP Version: 5.6.15
 
@@ -86,6 +86,50 @@ CREATE TABLE `usuarios` (
 INSERT INTO `usuarios` (`ID`, `Login`, `Senha`) VALUES
 (1, 'admin', 'admin');
 
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `vendas`
+--
+
+CREATE TABLE `vendas` (
+  `ID` int(6) UNSIGNED NOT NULL,
+  `Data` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `vendas`
+--
+
+INSERT INTO `vendas` (`ID`, `Data`) VALUES
+(1, '2017-09-23 10:20:20'),
+(2, '2017-09-22 13:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `vendas_itens`
+--
+
+CREATE TABLE `vendas_itens` (
+  `ID` int(6) UNSIGNED NOT NULL,
+  `ProdutoID` int(6) UNSIGNED NOT NULL,
+  `VendaID` int(6) UNSIGNED DEFAULT NULL,
+  `Quantidade` int(6) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `vendas_itens`
+--
+
+INSERT INTO `vendas_itens` (`ID`, `ProdutoID`, `VendaID`, `Quantidade`) VALUES
+(1, 1, 1, 10),
+(2, 2, 2, 50),
+(3, 3, 1, 100),
+(4, 4, 2, 801),
+(5, 5, 2, 274),
+(6, 6, 2, 10);
+
 --
 -- Indexes for dumped tables
 --
@@ -110,6 +154,20 @@ ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`ID`);
 
 --
+-- Indexes for table `vendas`
+--
+ALTER TABLE `vendas`
+  ADD PRIMARY KEY (`ID`);
+
+--
+-- Indexes for table `vendas_itens`
+--
+ALTER TABLE `vendas_itens`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `ProdutoID` (`ProdutoID`),
+  ADD KEY `VendaID` (`VendaID`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -129,6 +187,16 @@ ALTER TABLE `tipos`
 ALTER TABLE `usuarios`
   MODIFY `ID` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
+-- AUTO_INCREMENT for table `vendas`
+--
+ALTER TABLE `vendas`
+  MODIFY `ID` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `vendas_itens`
+--
+ALTER TABLE `vendas_itens`
+  MODIFY `ID` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+--
 -- Constraints for dumped tables
 --
 
@@ -137,6 +205,13 @@ ALTER TABLE `usuarios`
 --
 ALTER TABLE `produtos`
   ADD CONSTRAINT `produtos_ibfk_1` FOREIGN KEY (`Tipo`) REFERENCES `tipos` (`ID`);
+
+--
+-- Limitadores para a tabela `vendas_itens`
+--
+ALTER TABLE `vendas_itens`
+  ADD CONSTRAINT `vendas_itens_ibfk_1` FOREIGN KEY (`ProdutoID`) REFERENCES `produtos` (`ID`),
+  ADD CONSTRAINT `vendas_itens_ibfk_2` FOREIGN KEY (`VendaID`) REFERENCES `vendas` (`ID`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

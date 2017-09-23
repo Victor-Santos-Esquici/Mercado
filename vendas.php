@@ -33,6 +33,7 @@
     include ("includes/dbconnect.php");
     $alertMessage = "";
 
+    /*
     if (isset($_POST['produtoNome']))
     {
       if ($_POST['produtoID'] > 0) //edit
@@ -117,16 +118,12 @@
         $alertMessage = "Registro deletado com sucesso!";
       }
     }
+    */
 
     //read
-    $consulta = $conexao->prepare("SELECT produtos.ID, produtos.Nome, produtos.Tipo as TipoID, tipos.Nome AS Tipo, produtos.Valor, produtos.Estoque, IF(sum(vendas_itens.Quantidade) is NULL, 0, sum(vendas_itens.Quantidade)) AS Vendas, produtos.Estoque - IF(sum(vendas_itens.Quantidade) is NULL, 0, sum(vendas_itens.Quantidade)) AS Saldo FROM produtos inner JOIN tipos on produtos.Tipo = tipos.ID LEFT JOIN vendas_itens on produtos.ID = vendas_itens.ProdutoID GROUP BY vendas_itens.ProdutoID, produtos.ID ORDER by produtos.ID");
+    $consulta = $conexao->prepare("SELECT vendas.ID, vendas.Data, sum(produtos.Valor * vendas_itens.Quantidade) AS Total FROM vendas JOIN vendas_itens ON vendas.ID = vendas_itens.VendaID JOIN produtos ON produtos.ID = vendas_itens.ProdutoID GROUP BY vendas_itens.VendaID");
     $consulta->execute();
     $registros = $consulta->fetchAll();
-
-    //tipos
-    $consulta = $conexao->prepare("SELECT * FROM tipos");
-    $consulta->execute();
-    $tipos = $consulta->fetchAll();
   ?>
 
   <body class="fixed-nav sticky-footer bg-dark" id="page-top">
@@ -139,26 +136,22 @@
         <!-- Breadcrumbs -->
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="index.php">Meu Mercado</a></li>
-          <li class="breadcrumb-item active">Cadastrar Produtos</li>
+          <li class="breadcrumb-item active">Vendas</li>
         </ol>
 
         <div class="col-md-12">
-          <a class="btn btn-success form-group btnCreate" <?php echo (isset($_SESSION['usuarioID']) != "" ? "href='#editModal'" : "href='login.php' data-toggle='tooltip' title='Você precisa estar logado para cadastrar.'"); ?>>
+          <!--<a class="btn btn-success form-group btnCreate" <?php //echo (isset($_SESSION['usuarioID']) != "" ? "href='#editModal'" : "href='login.php' data-toggle='tooltip' title='Você precisa estar logado para cadastrar.'"); ?>>
             <span><i class="fa fa-plus" aria-hidden="true"></i> Adicionar</span>
           </a>
                   
-          <br>
+          <br>-->
           
           <table id="dataTable" class="table table-bordered" width="100%" id="dataTable" cellspacing="0">
             <thead>
               <tr>
                 <th width="50px">Código</th>
-                <th>Nome</th>
-                <th>Tipo</th>
-                <th>Valor</th>
-                <th>Estoque</th>
-                <th>Vendas</th>
-                <th>Saldo</th>
+                <th>Total</th>
+                <th>Data</th>
                 <th width="50px">Gerenciar</th>
               </tr>
             </thead>
@@ -166,13 +159,9 @@
             <tfoot>
               <tr>
                 <th>Código</th>
-                <th>Nome</th>
-                <th>Tipo</th>
-                <th>Valor</th>
-                <th>Estoque</th>
-                <th>Vendas</th>
-                <th>Saldo</th>
-                <th>Gerenciar</th>
+                <th>Total</th>
+                <th>Data</th>
+                <th width="50px">Gerenciar</th>
               </tr>
             </tfoot>
 
@@ -181,17 +170,10 @@
                 foreach ($registros as $key => $value)
                 {
                   echo "<tr>";
-                  echo  "<td class='produtoID' data-id='" . $value['ID'] . "'>" . $value['ID'] . "</td>";
-                  echo  "<td class='produtoNome'>" . $value['Nome'] . "</td>";
-                  echo  "<td class='produtoTipo' data-tipo='" . $value['TipoID'] . "'>" . $value['Tipo'] . "</td>";
-                  echo  "<td class='produtoValor'>" . $value['Valor'] . "</td>";
-                  echo  "<td class='produtoEstoque'>" . $value['Estoque'] . "</td>";
-                  echo  "<td class='produtoVendas'>" . $value['Vendas'] . "</td>";
-                  echo  "<td class='produtoSaldo'>" . $value['Saldo'] . "</td>";
-                  echo  "<td class='text-center'>";
-                  echo    "<a " . (isset($_SESSION['usuarioID']) != "" ? "href='#editModal'" : "href='login.php' data-toggle='tooltip' data-placement='left' title='Você precisa estar logado para editar.'") . " class='btnEdit'><i class='fa fa-pencil' aria-hidden='true'></i></a> ";
-                  echo    "<a " . (isset($_SESSION['usuarioID']) != "" ? "href='#deleteModal'" : "href='login.php' data-toggle='tooltip' data-placement='left' title='Você precisa estar logado para deletar.'") . " class='btnDelete'><i class='fa fa-trash' aria-hidden='true'></i></a>";
-                  echo  "</td>";
+                  echo  "<td class='vendaID' data-id='" . $value['ID'] . "'>" . $value['ID'] . "</td>";
+                  echo  "<td class='vendaTotal'>" . $value['Total'] . "</td>";
+                  echo  "<td class='vendaData'>" . $value['Data'] . "</td>";
+                  echo  "<td class='text-center'><a href='#deleteModal' class='btnDelete'><i class='fa fa-trash' aria-hidden='true'></i></a></td>";
                   echo "</tr>";
                 }
               ?>
@@ -202,7 +184,7 @@
       </div>
     </div>
 
-    <div class="remodal" data-remodal-id="editModal">
+    <!--<div class="remodal" data-remodal-id="editModal">
       <button data-remodal-action="close" class="remodal-close"></button>
       <form action="produtos.php#alertModal" id="produtoCadastro" class="well form-horizontal" method="post">
         <fieldset>
@@ -227,11 +209,11 @@
                 <span class="input-group-addon"><i class="fa fa-list-alt" aria-hidden="true"></i></span>
                 <select name="produtoTipo" class="form-control selectpicker">
                   <option value=" ">Selecione o Tipo</option>
-                  <?php
+                  <?php/*
                     foreach($tipos as $key => $value)
                     {
                       echo "<option value='" . $value['ID'] . "'>" . $value['Nome'] . "</option>";
-                    }
+                    }*/
                   ?>
                 </select>
               </div>
@@ -281,10 +263,10 @@
 
     <div class="remodal" data-remodal-id="alertModal">
       <button data-remodal-action="close" class="remodal-close"></button>
-      <h2><?php echo $alertMessage; ?></h2>
+      <h2><?php// echo $alertMessage; ?></h2>
       <br>
       <button data-remodal-action="confirm" class="remodal-confirm">OK</button>
-    </div>
+    </div>-->
 
     <?php include ('includes/footer.html'); ?>
 
@@ -312,12 +294,12 @@
             "url": "json/Portuguese-Brasil.json"
           },
           "aoColumnDefs": [
-            { "bSearchable": false, "aTargets": [ 0, 3, 4, 5 ] },
-            { "bSortable": false, "aTargets": [ 5 ] }
+            { "bSearchable": false, "aTargets": [ 3 ] },
+            { "bSortable": false, "aTargets": [ 3 ] }
           ]
         });
 
-        $('#produtoCadastro').bootstrapValidator({
+        /*$('#produtoCadastro').bootstrapValidator({
           // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
           feedbackIcons: {
             valid: 'fa fa-check',
@@ -423,7 +405,7 @@
           var produtoNome = $($item).find(".produtoNome").html();
           $("input[name='produtoID']").val(produtoID);
           $(".deleteProduto").empty().append(produtoNome);
-        });
+        });*/
       });
     </script>
   </body>
