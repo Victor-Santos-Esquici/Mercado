@@ -459,3 +459,7 @@ small {
 .btn.disabled {
   pointer-events: auto !important;
 }
+
+.venda {
+  cursor: pointer;
+}

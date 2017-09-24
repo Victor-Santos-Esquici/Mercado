@@ -306,7 +306,6 @@
 
     <script>
       $(document).ready(function(){
-
         $("#dataTable").DataTable({
           "language": {
             "url": "json/Portuguese-Brasil.json"

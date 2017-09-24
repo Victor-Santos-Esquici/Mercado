@@ -9,7 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Produtos</title>
+    <title>Vendas</title>
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -170,9 +170,9 @@
                 foreach ($registros as $key => $value)
                 {
                   echo "<tr>";
-                  echo  "<td class='vendaID' data-id='" . $value['ID'] . "'>" . $value['ID'] . "</td>";
-                  echo  "<td class='vendaTotal'>" . $value['Total'] . "</td>";
-                  echo  "<td class='vendaData'>" . $value['Data'] . "</td>";
+                  echo  "<td class='venda vendaID' data-id='" . $value['ID'] . "'>" . $value['ID'] . "</td>";
+                  echo  "<td class='venda vendaTotal'>" . $value['Total'] . "</td>";
+                  echo  "<td class='venda vendaData'>" . $value['Data'] . "</td>";
                   echo  "<td class='text-center'><a href='#deleteModal' class='btnDelete'><i class='fa fa-trash' aria-hidden='true'></i></a></td>";
                   echo "</tr>";
                 }
@@ -288,7 +288,6 @@
 
     <script>
       $(document).ready(function(){
-
         $("#dataTable").DataTable({
           "language": {
             "url": "json/Portuguese-Brasil.json"
@@ -298,6 +297,12 @@
             { "bSortable": false, "aTargets": [ 3 ] }
           ]
         });
+
+        $(".venda").click(function() {
+          window.location.href = window.location.pathname.replace("vendas.php", "") + "venda.php?id=" + $(this).parent().find('.vendaID').data("id");
+        });
+
+        $(".vendaTotal").mask("00.000,00", {reverse: true});
 
         /*$('#produtoCadastro').bootstrapValidator({
           // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
