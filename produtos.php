@@ -58,11 +58,11 @@
         
         if ($resultado == 0)
         {
-          $alertMessage = "Falha ao atualizar o registro.";
+          $alertMessage = "Falha ao atualizar o produto.";
         }
         else
         {
-          $alertMessage = "Registro atualizado com sucesso!";
+          $alertMessage = "Produto atualizado com sucesso!";
         }
       }
       else //insert
@@ -87,11 +87,11 @@
 
         if ($resultado == 0)
         {
-          $alertMessage = "Falha ao inserir o novo registro.";
+          $alertMessage = "Falha ao inserir o novo produto.";
         }
         else
         {
-          $alertMessage = "Registro inserido com sucesso!";
+          $alertMessage = "Produto com sucesso no estoque!";
         }
       }
     }
@@ -110,11 +110,11 @@
 
       if ($resultado == 0)
       {
-        $alertMessage = "Falha ao deletar o registro!";
+        $alertMessage = "Falha ao deletar o produto!";
       }
       else
       {
-        $alertMessage = "Registro deletado com sucesso!";
+        $alertMessage = "Produto deletado com sucesso!";
       }
     }
 
@@ -144,7 +144,7 @@
 
         <div class="col-md-12">
           <a class="btn btn-success form-group btnCreate" <?php echo (isset($_SESSION['usuarioID']) != "" ? "href='#editModal'" : "href='login.php' data-toggle='tooltip' title='Você precisa estar logado para cadastrar.'"); ?>>
-            <span><i class="fa fa-plus" aria-hidden="true"></i> Adicionar</span>
+            <span><i class="fa fa-plus" aria-hidden="true"></i> Novo Produto</span>
           </a>
                   
           <br>
@@ -312,7 +312,7 @@
           },
           "aoColumnDefs": [
             { "bSearchable": false, "aTargets": [ 0, 3, 4, 5 ] },
-            { "bSortable": false, "aTargets": [ 5 ] }
+            { "bSortable": false, "aTargets": [ 7 ] }
           ]
         });
 

@@ -9,18 +9,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Vendas</title>
+    <title>Vender</title>
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom fonts for this template -->
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- Plugin CSS -->
-    <link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
-    <link href="css/remodal.css" rel="stylesheet" type="text/css">
-    <link href="css/remodal-default-theme.css" rel="stylesheet" type="text/css">
 
     <!-- Custom styles for this template -->
     <link href="css/sb-admin.css" rel="stylesheet">
@@ -119,11 +114,6 @@
       }
     }
     */
-
-    //read
-    $consulta = $conexao->prepare("SELECT vendas.ID, vendas.Data, sum(produtos.Valor * vendas_itens.Quantidade) AS Total FROM vendas JOIN vendas_itens ON vendas.ID = vendas_itens.VendaID JOIN produtos ON produtos.ID = vendas_itens.ProdutoID GROUP BY vendas_itens.VendaID");
-    $consulta->execute();
-    $registros = $consulta->fetchAll();
   ?>
 
   <body class="fixed-nav sticky-footer bg-dark" id="page-top">
@@ -136,64 +126,81 @@
         <!-- Breadcrumbs -->
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="index.php">Meu Mercado</a></li>
-          <li class="breadcrumb-item active">Vendas</li>
+          <li class="breadcrumb-item"><a href="vendas.php">Vendas</a></li>
+          <li class="breadcrumb-item active">Vender</li>
         </ol>
 
-        <div class="col-md-12">
-          <a href="criar-venda.php" class="btn btn-success form-group btnCreate">
-            <span><i class="fa fa-plus" aria-hidden="true"></i> Adicionar</span>
-          </a>
-                
-          <br>
-          
-          <table id="dataTable" class="table table-bordered" width="100%" id="dataTable" cellspacing="0">
-            <thead>
-              <tr>
-                <th width="50px">Código</th>
-                <th>Total</th>
-                <th>Data</th>
-                <th width="50px">Gerenciar</th>
-              </tr>
-            </thead>
+        <!-- content -->
 
-            <tfoot>
-              <tr>
-                <th>Código</th>
-                <th>Total</th>
-                <th>Data</th>
-                <th width="50px">Gerenciar</th>
-              </tr>
-            </tfoot>
+          <fieldset>
+            <legend id="modalTitle" class="text-center">Vender</legend>
 
-            <tbody>
-              <?php
-                foreach ($registros as $key => $value)
-                {
-                  echo "<tr>";
-                  echo  "<td class='venda vendaID' data-id='" . $value['ID'] . "'>" . $value['ID'] . "</td>";
-                  echo  "<td class='venda vendaTotal'>" . $value['Total'] . "</td>";
-                  echo  "<td class='venda vendaData'>" . $value['Data'] . "</td>";
-                  echo  "<td class='text-center'><a href='#deleteModal' class='btnDelete'><i class='fa fa-trash' aria-hidden='true'></i></a></td>";
-                  echo "</tr>";
-                }
-              ?>
-            </tbody>
-          </table>
-          <br>
-        </div>
+            <div class="form-group">
+              <label class="col-md-12">Data</label>  
+              <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-calendar" aria-hidden="true"></i></span>
+                  <input name="vendaData" class="form-control" type="text" disabled>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-md-12">Total</label>
+              <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-dollar" aria-hidden="true"></i></span>
+                  <input name="vendaTotal" class="form-control" type="text" value="0" disabled>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+
+        <!--<form action="criar-venda.php" id="vendaCadastro" class="well form-horizontal" method="post">-->
+          <fieldset>
+            <legend id="modalTitle" class="text-center">Produtos</legend>
+
+              <div class="newProduct container">
+                <div class="row">
+
+                  <div class="form-group">
+                    <label class="col-md-12">Nome</label>
+                    <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
+                      <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-shopping-basket" aria-hidden="true"></i></span>
+                        <input name="vendaNome" placeholder="Arroz" class="form-control" type="text">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-md-12">Quantidade</label>
+                    <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
+                      <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-shopping-cart" aria-hidden="true"></i></span>
+                        <input name="vendaQuantidade" class="form-control" type="text" placeholder="0">
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            <div class="form-group">
+              <div class="col-md-12">
+                <button type="submit" class="btn btn-primary btnAdd"><i class="fa fa-plus" aria-hidden="true"> Adicionar</i></button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="col-md-12 text-center">
+                <button type="button" class="btn btn-success">Enviar <i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+              </div>
+            </div>
+
+          </fieldset>
+        <!--</form>-->
       </div>
-    </div>
-
-    <div class="remodal" data-remodal-id="deleteModal">
-      <form action="produtos.php#alertModal" method="post">
-        <input type="hidden" name="produtoID" value="">
-        <button data-remodal-action="close" class="remodal-close"></button>
-        <h2>Deseja deletar este produto?</h2>
-        <p class="deleteProduto"></p>
-        <br>
-        <button data-remodal-action="cancel" class="remodal-cancel">Não</button>
-        <button type="submit" class="remodal-confirm">Sim</button>
-      </form>
     </div>
 
     <div class="remodal" data-remodal-id="alertModal">
@@ -212,8 +219,6 @@
 
     <!-- Plugin JavaScript -->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-    <script src="vendor/datatables/jquery.dataTables.js"></script>
-    <script src="vendor/datatables/dataTables.bootstrap4.js"></script>
     <script src="js/jquery.mask.min.js"></script>
     <script src="js/bootstrapValidator.min.js"></script>
     <script src="js/remodal.js"></script>
@@ -222,24 +227,8 @@
     <script src="js/sb-admin.js"></script>
 
     <script>
-      $(document).ready(function(){
-        $("#dataTable").DataTable({
-          "language": {
-            "url": "json/Portuguese-Brasil.json"
-          },
-          "aoColumnDefs": [
-            { "bSearchable": false, "aTargets": [ 3 ] },
-            { "bSortable": false, "aTargets": [ 3 ] }
-          ]
-        });
-
-        $(".venda").click(function() {
-          window.location.href = window.location.pathname.replace("vendas.php", "") + "venda.php?id=" + $(this).parent().find('.vendaID').data("id");
-        });
-
+      $(document).ready(function() {
         $(".vendaTotal").mask("00.000,00", {reverse: true});
-
-        //$(".vendaData").mask("dd/MM/yyyy");
 
         var today = new Date();
         var dd = today.getDate();
@@ -326,18 +315,31 @@
         
         //fields
         $(".produtoValor").mask("00.000,00", {reverse: true});
-        $(".produtoEstoque").mask("000.000", {reverse: true});
+        $(".produtoEstoque").mask("000.000", {reverse: true});*/
 
 
-        $(".btnCreate").click(function() {
-          $("#modalTitle").text("Cadastrar Produto");
+        $(".btnAdd").click(function() {
 
-          $("input[name='produtoID']").val("");
-          $("input[name='produtoNome']").val("");
-          $("select[name='produtoTipo'] option").removeAttr("selected");
-          $("option[value=' ']").attr("selected", "selected");
-          $("input[name='produtoValor']").val("");
-          $("input[name='produtoEstoque']").val("");
+          var produtoNome = $("input[name='vendaNome']").val();
+          var produtoQuantidade = $("input[name='vendaQuantidade']").val();
+
+          $(".newProduct").parent().append("<div class='container'>");
+            $(".newProduct").parent().append("<div class='row'>");
+
+              $(".newProduct").parent().append("<div class='form-group'>");
+                  $(".newProduct").parent().append("<label class='col-md-12'>" + produtoNome + "</label>");
+              $(".newProduct").parent().append("</div>");
+
+              $(".newProduct").parent().append("<div class='form-group'>");
+                  $(".newProduct").parent().append("<label class='col-md-12'>" + produtoQuantidade + "</label>");
+              $(".newProduct").parent().append("</div>");
+
+            $(".newProduct").parent().append("</div>");
+          $(".newProduct").parent().append("</div>");
+
+          $("input[name='vendaNome']").val("");
+          $("input[name='vendaQuantidade']").val("");
+
         });
         
         $(".btnDelete").click(function() {
@@ -346,7 +348,7 @@
           var produtoNome = $($item).find(".produtoNome").html();
           $("input[name='produtoID']").val(produtoID);
           $(".deleteProduto").empty().append(produtoNome);
-        });*/
+        });
       });
     </script>
   </body>

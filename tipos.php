@@ -51,11 +51,11 @@
         
         if ($resultado == 0)
         {
-          $alertMessage = "Falha ao atualizar o registro.";
+          $alertMessage = "Falha ao atualizar o tipo.";
         }
         else
         {
-          $alertMessage = "Registro atualizado com sucesso!";
+          $alertMessage = "Tipo atualizado com sucesso!";
         }
       }
       else //insert
@@ -73,11 +73,11 @@
 
         if ($resultado == 0)
         {
-          $alertMessage = "Falha ao inserir o novo registro.";
+          $alertMessage = "Falha ao inserir o novo tipo.";
         }
         else
         {
-          $alertMessage = "Registro inserido com sucesso!";
+          $alertMessage = "Tipo inserido com sucesso!";
         }
       }
     }
@@ -96,11 +96,11 @@
 
       if ($resultado == 0)
       {
-        $alertMessage = "Falha ao deletar o registro!";
+        $alertMessage = "Falha ao deletar o tipo!";
       }
       else
       {
-        $alertMessage = "Registro deletado com sucesso!";
+        $alertMessage = "Tipo deletado com sucesso!";
       }
     }
 

@@ -9,14 +9,14 @@
       <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Produtos">
         <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseComponents">
           <i class="fa fa-fw fa-shopping-cart"></i>
-          <span class="nav-link-text">Produtos</span>
+          <span class="nav-link-text">Estoque</span>
         </a>
         <ul class="sidenav-second-level collapse" id="collapseComponents">
           <li>
-            <a href="produtos.php">Gerenciar Produtos</a>
+            <a href="produtos.php">Produtos</a>
           </li>
           <li>
-            <a href="tipos.php">Gerenciar Tipos</a>
+            <a href="tipos.php">Tipos</a>
           </li>
         </ul>
       </li>
