@@ -160,9 +160,10 @@
           <fieldset>
             <legend id="modalTitle" class="text-center">Produtos</legend>
 
-              <div class="newProduct container">
+              <div class="container">
+                <div class="newProduct">
+                </div>
                 <div class="row">
-
                   <div class="form-group">
                     <label class="col-md-12">Nome</label>
                     <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
@@ -182,7 +183,6 @@
                       </div>
                     </div>
                   </div>
-
                 </div>
               </div>
 
@@ -192,11 +192,14 @@
               </div>
             </div>
 
-            <div class="form-group">
-              <div class="col-md-12 text-center">
-                <button type="button" class="btn btn-success">Enviar <i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+            <form>
+              <input type="hidden" name="produtosID">
+              <div class="form-group">
+                <div class="col-md-12 text-center">
+                  <button type="button" class="btn btn-success">Enviar <i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                </div>
               </div>
-            </div>
+            </form>
 
           </fieldset>
         <!--</form>-->
@@ -323,23 +326,41 @@
           var produtoNome = $("input[name='vendaNome']").val();
           var produtoQuantidade = $("input[name='vendaQuantidade']").val();
 
-          $(".newProduct").parent().append("<div class='container'>");
-            $(".newProduct").parent().append("<div class='row'>");
+          $(".newProduct").append(
+            "<div class='row'>" +
+              "<div class='form-group'>" + 
+                "<div class='col-md-12 center-block text-center pagination-centered inputGroupContainer'>" +
+                  "<div class='input-group'>" +
+                    "<span class='input-group-addon'><i class='fa fa-shopping-basket' aria-hidden='true'></i></span>" +
+                    "<input class='form-control' type='text' value='" + produtoNome + "' disabled>" +
+                  "</div>" + 
+                "</div>" +
+              "</div>" +
+              "<div class='form-group'>" + 
+                "<div class='col-md-12 center-block text-center pagination-centered inputGroupContainer'>" +
+                  "<div class='input-group'>" +
+                    "<span class='input-group-addon'><i class='fa fa-shopping-cart' aria-hidden='true'></i></span>" +
+                    "<input class='form-control' type='text' value='" + produtoQuantidade + "' disabled>" +
+                  "</div>" + 
+                "</div>" +
+              "</div>" +
+              "<div class='form-group'>" + 
+                "<div class='col-md-12 center-block text-center pagination-centered inputGroupContainer'>" +
+                  "<div class='input-group'>" +
+                    "<span class='input-group-addon'><i class='fa fa-close' aria-hidden='true'></i></span>" +
+                  "</div>" + 
+                "</div>" +
+              "</div>" +
+            "</div>"
+          );
+          
+          var produtosID = $("input[name='produtosID']").val();
+          produtosID += "1,";
 
-              $(".newProduct").parent().append("<div class='form-group'>");
-                  $(".newProduct").parent().append("<label class='col-md-12'>" + produtoNome + "</label>");
-              $(".newProduct").parent().append("</div>");
-
-              $(".newProduct").parent().append("<div class='form-group'>");
-                  $(".newProduct").parent().append("<label class='col-md-12'>" + produtoQuantidade + "</label>");
-              $(".newProduct").parent().append("</div>");
-
-            $(".newProduct").parent().append("</div>");
-          $(".newProduct").parent().append("</div>");
+          $("input[name='produtosID']").val(produtosID);
 
           $("input[name='vendaNome']").val("");
           $("input[name='vendaQuantidade']").val("");
-
         });
         
         $(".btnDelete").click(function() {
