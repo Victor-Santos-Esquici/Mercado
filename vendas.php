@@ -141,7 +141,7 @@
 
         <div class="col-md-12">
           <a href="criar-venda.php" class="btn btn-success form-group btnCreate">
-            <span><i class="fa fa-plus" aria-hidden="true"></i> Adicionar</span>
+            <span><i class="fa fa-plus" aria-hidden="true"></i> Vender</span>
           </a>
                 
           <br>
@@ -341,9 +341,9 @@
         });
         
         $(".btnDelete").click(function() {
-          var $item = $(this).closest("tr");
-          var produtoID = $($item).find(".produtoID").data("id");
-          var produtoNome = $($item).find(".produtoNome").html();
+          var item = $(this).closest("tr");
+          var produtoID = $(item).find(".produtoID").data("id");
+          var produtoNome = $(item).find(".produtoNome").html();
           $("input[name='produtoID']").val(produtoID);
           $(".deleteProduto").empty().append(produtoNome);
         });*/

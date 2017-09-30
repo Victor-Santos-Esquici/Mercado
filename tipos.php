@@ -125,7 +125,7 @@
         <!-- Breadcrumbs -->
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="index.php">Meu Mercado</a></li>
-          <li class="breadcrumb-item active">Gerenciar Tipos</li>
+          <li class="breadcrumb-item active">Tipos</li>
         </ol>
 
         <div class="col-md-12">
@@ -328,18 +328,18 @@
         $(".btnEdit").click(function() {
           $("#modalTitle").text("Editar Tipo");
 
-          var $item = $(this).closest("tr");
-          var tipoID = $($item).find(".tipoID").data("id");
-          var tipoNome = $($item).find(".tipoNome").html();
+          var item = $(this).closest("tr");
+          var tipoID = $(item).find(".tipoID").data("id");
+          var tipoNome = $(item).find(".tipoNome").html();
           
           $("input[name='tipoID']").val(tipoID);
           $("input[name='tipoNome']").val(tipoNome);
         });
         
         $(".btnDelete").click(function() {
-          var $item = $(this).closest("tr");
-          var tipoID = $($item).find(".tipoID").data("id");
-          var tipoNome = $($item).find(".tipoNome").html();
+          var item = $(this).closest("tr");
+          var tipoID = $(item).find(".tipoID").data("id");
+          var tipoNome = $(item).find(".tipoNome").html();
           $("input[name='tipoID']").val(tipoID);
           $(".deleteTipo").empty().append(tipoNome);
         });

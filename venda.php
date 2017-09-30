@@ -142,9 +142,9 @@
         }
 
         $(".btnDelete").click(function() {
-          var $item = $(this).closest("tr");
-          var produtoID = $($item).find(".produtoID").data("id");
-          var produtoNome = $($item).find(".produtoNome").html();
+          var item = $(this).closest("tr");
+          var produtoID = $(item).find(".produtoID").data("id");
+          var produtoNome = $(item).find(".produtoNome").html();
           $("input[name='produtoID']").val(produtoID);
           $(".deleteProduto").empty().append(produtoNome);
         });

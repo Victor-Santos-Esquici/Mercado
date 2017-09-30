@@ -139,7 +139,7 @@
         <!-- Breadcrumbs -->
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="index.php">Meu Mercado</a></li>
-          <li class="breadcrumb-item active">Cadastrar Produtos</li>
+          <li class="breadcrumb-item active">Produtos</li>
         </ol>
 
         <div class="col-md-12">
@@ -400,12 +400,12 @@
         $(".btnEdit").click(function() {
           $("#modalTitle").text("Editar Produto");
 
-          var $item = $(this).closest("tr");
-          var produtoID = $($item).find(".produtoID").data("id");
-          var produtoNome = $($item).find(".produtoNome").html();
-          var produtoTipo = $($item).find(".produtoTipo").data("tipo");
-          var produtoValor = $($item).find(".produtoValor").html();
-          var produtoEstoque = $($item).find(".produtoEstoque").html();
+          var item = $(this).closest("tr");
+          var produtoID = $(item).find(".produtoID").data("id");
+          var produtoNome = $(item).find(".produtoNome").html();
+          var produtoTipo = $(item).find(".produtoTipo").data("tipo");
+          var produtoValor = $(item).find(".produtoValor").html();
+          var produtoEstoque = $(item).find(".produtoEstoque").html();
           
           $("input[name='produtoID']").val(produtoID);
           $("input[name='produtoNome']").val(produtoNome);
@@ -417,9 +417,9 @@
         });
         
         $(".btnDelete").click(function() {
-          var $item = $(this).closest("tr");
-          var produtoID = $($item).find(".produtoID").data("id");
-          var produtoNome = $($item).find(".produtoNome").html();
+          var item = $(this).closest("tr");
+          var produtoID = $(item).find(".produtoID").data("id");
+          var produtoNome = $(item).find(".produtoNome").html();
           $("input[name='produtoID']").val(produtoID);
           $(".deleteProduto").empty().append(produtoNome);
         });

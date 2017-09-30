@@ -49,5 +49,4 @@
     }, 1000, 'easeInOutExpo');
     event.preventDefault();
   });
-
 })(jQuery); // End of use strict

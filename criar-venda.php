@@ -28,92 +28,10 @@
     include ("includes/dbconnect.php");
     $alertMessage = "";
 
-    /*
-    if (isset($_POST['produtoNome']))
-    {
-      if ($_POST['produtoID'] > 0) //edit
-      {
-        if (!isset($_SESSION['usuarioID']) != "")
-        {
-          header("Location: index.php#alertModal");
-        }
-
-        $produtoID = $_POST['produtoID'];
-        $produtoNome = $_POST['produtoNome'];
-        $produtoTipo = $_POST['produtoTipo'];
-        $produtoValor = $_POST['produtoValor'];
-        $produtoEstoque = $_POST['produtoEstoque'];
-
-        $produtoValor = str_replace(".", "", $produtoValor);
-        $produtoValor = str_replace(",", ".", $produtoValor);
-        print_r($produtoValor);
-
-        $consulta = $conexao->prepare("UPDATE produtos SET Nome = ?, Tipo = ?, Valor = ?, Estoque = ? WHERE ID = ?");
-        $consulta->execute(array($produtoNome, $produtoTipo, $produtoValor, $produtoEstoque, $produtoID));
-        $resultado = $consulta->rowCount();
-        
-        if ($resultado == 0)
-        {
-          $alertMessage = "Falha ao atualizar o registro.";
-        }
-        else
-        {
-          $alertMessage = "Registro atualizado com sucesso!";
-        }
-      }
-      else //insert
-      {
-        if (!isset($_SESSION['usuarioID']) != "")
-        {
-          header("Location: index.php#alertModal");
-        }
-
-        $produtoNome = $_POST['produtoNome'];
-        $produtoTipo = $_POST['produtoTipo'];
-        $produtoValor = $_POST['produtoValor'];
-        $produtoEstoque = $_POST['produtoEstoque'];
-
-        $produtoValor = str_replace(".", "", $produtoValor);
-        $produtoValor = str_replace(",", ".", $produtoValor);
-        $produtoEstoque = str_replace(".", "", $produtoEstoque);
-
-        $consulta = $conexao->prepare("INSERT INTO produtos (Nome, Tipo, Valor, Estoque) VALUES (?,?,?,?)");
-        $consulta->execute(array($produtoNome, $produtoTipo, $produtoValor, $produtoEstoque));
-        $resultado = $consulta->rowCount();
-
-        if ($resultado == 0)
-        {
-          $alertMessage = "Falha ao inserir o novo registro.";
-        }
-        else
-        {
-          $alertMessage = "Registro inserido com sucesso!";
-        }
-      }
-    }
-    elseif (isset($_POST['produtoID'])) //delete
-    {
-      if (!isset($_SESSION['usuarioID']) != "")
-      {
-        header("Location: index.php#alertModal");
-      }
-      
-      $produtoID = $_POST['produtoID'];
-
-      $consulta = $conexao->prepare("DELETE FROM produtos WHERE ID = ?");
-      $consulta->execute(array($produtoID));
-      $resultado = $consulta->rowCount();
-
-      if ($resultado == 0)
-      {
-        $alertMessage = "Falha ao deletar o registro!";
-      }
-      else
-      {
-        $alertMessage = "Registro deletado com sucesso!";
-      }
-    }
-    */
+    //read
+    $consulta = $conexao->prepare("SELECT * FROM produtos");
+    $consulta->execute();
+    $produtos = $consulta->fetchAll();
   ?>
 
   <body class="fixed-nav sticky-footer bg-dark" id="page-top">
@@ -131,78 +49,90 @@
         </ol>
 
         <!-- content -->
+        <div class="container">
+          <div class="row">
+            <fieldset class="col-md-12">
+              <legend class="text-center">Vender</legend>
 
-          <fieldset>
-            <legend id="modalTitle" class="text-center">Vender</legend>
-
-            <div class="form-group">
-              <label class="col-md-12">Data</label>  
-              <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
-                <div class="input-group">
-                  <span class="input-group-addon"><i class="fa fa-calendar" aria-hidden="true"></i></span>
-                  <input name="vendaData" class="form-control" type="text" disabled>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="col-md-12">Total</label>
-              <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
-                <div class="input-group">
-                  <span class="input-group-addon"><i class="fa fa-dollar" aria-hidden="true"></i></span>
-                  <input name="vendaTotal" class="form-control" type="text" value="0" disabled>
-                </div>
-              </div>
-            </div>
-          </fieldset>
-
-        <!--<form action="criar-venda.php" id="vendaCadastro" class="well form-horizontal" method="post">-->
-          <fieldset>
-            <legend id="modalTitle" class="text-center">Produtos</legend>
-
-              <div class="container">
-                <div class="newProduct">
-                </div>
-                <div class="row">
-                  <div class="form-group">
-                    <label class="col-md-12">Nome</label>
-                    <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
-                      <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-shopping-basket" aria-hidden="true"></i></span>
-                        <input name="vendaNome" placeholder="Arroz" class="form-control" type="text">
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="col-md-12">Quantidade</label>
-                    <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
-                      <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-shopping-cart" aria-hidden="true"></i></span>
-                        <input name="vendaQuantidade" class="form-control" type="text" placeholder="0">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            <div class="form-group">
-              <div class="col-md-12">
-                <button type="submit" class="btn btn-primary btnAdd"><i class="fa fa-plus" aria-hidden="true"> Adicionar</i></button>
-              </div>
-            </div>
-
-            <form>
-              <input type="hidden" name="produtosID">
               <div class="form-group">
-                <div class="col-md-12 text-center">
-                  <button type="button" class="btn btn-success">Enviar <i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                <label class="col-md-12">Data</label>  
+                <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-calendar" aria-hidden="true"></i></span>
+                    <input name="vendaData" class="form-control" type="text" disabled>
+                  </div>
                 </div>
               </div>
-            </form>
 
-          </fieldset>
-        <!--</form>-->
+              <div class="form-group">
+                <label class="col-md-12">Total</label>
+                <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-dollar" aria-hidden="true"></i></span>
+                    <input name="vendaTotal" class="form-control" type="text" value="0" disabled>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="row">
+            <fieldset class="col-md-12">
+              <legend class="text-center">Produtos</legend>
+
+              <div class="newProduct"></div>
+
+              <div class="row">
+                <div class="form-group col-md-8"> 
+                  <label class="col-md-12">Produto</label>
+                  <div class="col-md-12 selectContainer">
+                    <div class="input-group">
+                      <span class="input-group-addon"><i class="fa fa-shopping-basket" aria-hidden="true"></i></span>
+                      <select id="produtoNome" name="produtoNome" class="form-control selectpicker">
+                        <option value=" ">Selecione o Produto</option>
+                        <?php
+                          foreach($produtos as $key => $value)
+                          {
+                            echo "<option value='" . $value['ID'] . "' data-valor='" . $value['Valor'] . "'>" . $value['Nome'] . "</option>";
+                          }
+                        ?>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group col-md-3">
+                  <label class="col-md-12">Quantidade</label>
+                  <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
+                    <div class="input-group">
+                      <span class="input-group-addon"><i class="fa fa-shopping-cart" aria-hidden="true"></i></span>
+                      <input name="vendaQuantidade" class="form-control" type="text" placeholder="0">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group col-md-1">
+                  <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
+                    <div class="input-group">
+                      <button type="submit" class="btn btn-primary btnAdd" style="margin-top: 32px; cursor: pointer;"><i class="fa fa-plus" aria-hidden="true"> </i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+
+        <form>
+          <input type="hidden" name="produtosID">
+          <div class="form-group">
+            <div class="col-md-12 text-center">
+              <button type="button" class="btn btn-success">Vender <i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
 
@@ -232,144 +162,171 @@
     <script>
       $(document).ready(function() {
         $(".vendaTotal").mask("00.000,00", {reverse: true});
-
-        var today = new Date();
-        var dd = today.getDate();
-        var mm = today.getMonth() + 1; //January is 0!
-
-        var yyyy = today.getFullYear();
-
-        if (dd < 10) {
-            dd='0'+dd;
-        }
-
-        if (mm < 10) {
-            mm='0'+mm;
-        }
-
-        var today = dd + '/' + mm + '/' + yyyy;
+        $(".produtoTotal").mask("00.000,00", {reverse: true});
         
-        $("input[name='vendaData']").val(today);
+        $("input[name='vendaData']").val(getToday());
 
-        /*$('#produtoCadastro').bootstrapValidator({
-          // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
-          feedbackIcons: {
-            valid: 'fa fa-check',
-            invalid: 'fa fa-times',
-            validating: 'glyphicon glyphicon-refresh'
-          },
-          fields: {
-            produtoNome: {
-              validators: {
-                stringLength: {
-                  message: 'O nome deve conter no mínimo 2 caracteres.',
-                  min: 2,
-                },
-                notEmpty: {
-                  message: 'Preencha o nome do produto.'
-                }
-              }
-            },
-            produtoTipo: {
-              validators: {
-                notEmpty: {
-                  message: 'Selecione um tipo.'
-                }
-              }
-            },
-            produtoValor: {
-              validators: {
-                notEmpty: {
-                  message: 'Preencha o valor do produto.'
-                }
-              }
-            },
-            produtoEstoque: {
-              validators: {
-                notEmpty: {
-                  message: 'Preencha o estoque do produto.'
-                }
-              }
-            }
-          }
-        })
-        .on('success.form.bv', function(e) {
-          $('#success_message').slideDown({ opacity: "show" }, "slow") // Do something ...
-            $('#produtoCadastro').data('bootstrapValidator').resetForm();
+        $(".input-group").on("click", ".btnAdd", function() {
 
-          // Prevent form submission
-          e.preventDefault();
-
-          // Get the form instance
-          var $form = $(e.target);
-
-          // Get the BootstrapValidator instance
-          var bv = $form.data('bootstrapValidator');
-
-          // Use Ajax to submit form data
-          $.post($form.attr('action'), $form.serialize(), function(result) {
-            console.log(result);
-          }, 'json');
-        });
-
-        //inputs
-        $("#produtoValor").mask("00.000,00", {reverse: true});
-        $("#produtoEstoque").mask("000.000", {reverse: true});
-        
-        //fields
-        $(".produtoValor").mask("00.000,00", {reverse: true});
-        $(".produtoEstoque").mask("000.000", {reverse: true});*/
-
-
-        $(".btnAdd").click(function() {
-
-          var produtoNome = $("input[name='vendaNome']").val();
+          var produtoID = $("#produtoNome").val();
+          var produtoNome = $("#produtoNome option:selected").text();
+          var produtoValor = $("#produtoNome option:selected").data("valor");
           var produtoQuantidade = $("input[name='vendaQuantidade']").val();
+          var vendaTotal = parseFloat($("input[name='vendaTotal']").val());
+          var produtoTotal = (produtoValor * produtoQuantidade).toFixed(2);
+          vendaTotal += produtoValor * produtoQuantidade;
+          vendaTotal = Number(vendaTotal).toFixed(2);
+
+          var produtosID = $("input[name='produtosID']").val();
+          produtosID += produtoID + ",";
+          $("input[name='produtosID']").val(produtosID);
+
+          if ($(".newProduct").children().length == 0) {
+            $(".newProduct").append(
+              "<div class='row header'>" +
+                "<div class='form-group col-md-5'>" + 
+                  "<div class='col-md-12 center-block text-center pagination-centered inputGroupContainer'>" +
+                    "<div class='input-group'>" +
+                      "<label class='col-md-12'>Produto</label>" +
+                    "</div>" + 
+                  "</div>" +
+                "</div>" +
+                "<div class='form-group col-md-2'>" + 
+                  "<div class='col-md-12 center-block text-center pagination-centered inputGroupContainer'>" +
+                    "<div class='input-group'>" +
+                      "<label class='col-md-12'>Valor</label>" +
+                    "</div>" + 
+                  "</div>" +
+                "</div>" +
+                "<div class='form-group col-md-2'>" + 
+                  "<div class='col-md-12 center-block text-center pagination-centered inputGroupContainer'>" +
+                    "<div class='input-group'>" +
+                      "<label class='col-md-12'>Quantidade</label>" +
+                    "</div>" + 
+                  "</div>" +
+                "</div>" +
+                "<div class='form-group col-md-2'>" + 
+                  "<div class='col-md-12 center-block text-center pagination-centered inputGroupContainer'>" +
+                    "<div class='input-group'>" +
+                      "<label class='col-md-12'>Total</label>" +
+                    "</div>" + 
+                  "</div>" +
+                "</div>" +
+              "</div>"
+            );
+          }
 
           $(".newProduct").append(
             "<div class='row'>" +
-              "<div class='form-group'>" + 
+              "<div class='form-group col-md-5'>" + 
                 "<div class='col-md-12 center-block text-center pagination-centered inputGroupContainer'>" +
                   "<div class='input-group'>" +
                     "<span class='input-group-addon'><i class='fa fa-shopping-basket' aria-hidden='true'></i></span>" +
-                    "<input class='form-control' type='text' value='" + produtoNome + "' disabled>" +
+                    "<input class='form-control' name='produtoNome' type='text' value='" + produtoNome + "' disabled>" +
                   "</div>" + 
                 "</div>" +
               "</div>" +
-              "<div class='form-group'>" + 
+              "<div class='form-group col-md-2'>" + 
+                "<div class='col-md-12 center-block text-center pagination-centered inputGroupContainer'>" +
+                  "<div class='input-group'>" +
+                    "<span class='input-group-addon'><i class='fa fa-dollar' aria-hidden='true'></i></span>" +
+                    "<input class='form-control' name='produtoValor' type='text' value='" + produtoValor + "' disabled>" +
+                  "</div>" + 
+                "</div>" +
+              "</div>" +
+              "<div class='form-group col-md-2'>" + 
                 "<div class='col-md-12 center-block text-center pagination-centered inputGroupContainer'>" +
                   "<div class='input-group'>" +
                     "<span class='input-group-addon'><i class='fa fa-shopping-cart' aria-hidden='true'></i></span>" +
-                    "<input class='form-control' type='text' value='" + produtoQuantidade + "' disabled>" +
+                    "<input class='form-control' name='produtoQuantidade' type='text' value='" + produtoQuantidade + "' disabled>" +
                   "</div>" + 
                 "</div>" +
               "</div>" +
-              "<div class='form-group'>" + 
+              "<div class='form-group col-md-2'>" + 
                 "<div class='col-md-12 center-block text-center pagination-centered inputGroupContainer'>" +
                   "<div class='input-group'>" +
-                    "<span class='input-group-addon'><i class='fa fa-close' aria-hidden='true'></i></span>" +
+                    "<span class='input-group-addon'><i class='fa fa-dollar' aria-hidden='true'></i></span>" +
+                    "<input class='form-control' name='produtoTotal' type='text' value='" + produtoTotal + "' disabled>" +
+                  "</div>" + 
+                "</div>" +
+              "</div>" +
+              "<div class='form-group col-md-1'>" + 
+                "<div class='col-md-12 center-block text-center pagination-centered inputGroupContainer'>" +
+                  "<div class='input-group'>" +
+                    "<button type='button' class='btn btn-danger btnRemove' data-produto-id='" + produtoID + "' style='cursor: pointer;'><i class='fa fa-close' aria-hidden='true'> </i></button>" +
                   "</div>" + 
                 "</div>" +
               "</div>" +
             "</div>"
           );
-          
-          var produtosID = $("input[name='produtosID']").val();
-          produtosID += "1,";
 
-          $("input[name='produtosID']").val(produtosID);
-
+          $("#produtoNome option[value='" + produtoID + "']").remove();
           $("input[name='vendaNome']").val("");
           $("input[name='vendaQuantidade']").val("");
+          $("input[name='vendaTotal']").val(vendaTotal);
+          $("input[name='produtoTotal']").val
         });
         
-        $(".btnDelete").click(function() {
-          var $item = $(this).closest("tr");
-          var produtoID = $($item).find(".produtoID").data("id");
-          var produtoNome = $($item).find(".produtoNome").html();
-          $("input[name='produtoID']").val(produtoID);
-          $(".deleteProduto").empty().append(produtoNome);
+        $(".newProduct").on("click", ".btnRemove", function() {
+          var produtoID = $(this).data("produto-id");
+          var produtoNome = $(this).closest(".row").find("input[name='produtoNome']").val();
+          var produtoValor = $(this).closest(".row").find("input[name='produtoValor']").val();
+          var produtoTotal = $(this).closest(".row").find("input[name='produtoTotal']").val();
+          var vendaTotal = $("input[name='vendaTotal']").val();
+          vendaTotal -= produtoTotal;
+          vendaTotal = Number(vendaTotal).toFixed(2);
+
+          /*if (vendaTotal < 0) {
+            vendaTotal = 0;
+          }*/
+          
+          $(this).closest(".row").remove();
+
+          if ($(".newProduct").children().length == 1) {
+            $(".header").remove();
+          }
+
+          var produtosID = $("input[name='produtosID']").val();
+          produtosID = produtosID.replace(produtoID + ",", "");
+          $("input[name='produtosID']").val(produtosID);
+
+          $("input[name='vendaTotal']").val(vendaTotal);
+
+          $("#produtoNome").append($("<option>", {
+            'value': produtoID,
+            'text': produtoNome,
+            'data-valor': produtoValor
+          }));
+
+          //sort the values
+          var selectList = $("#produtoNome option");
+
+          selectList.sort(function(a,b) {
+            a = a.value;
+            b = b.value;
+            return a-b;
+          });
+
+          $("#produtoNome").html(selectList);
         });
+
+        function getToday() {
+          var today = new Date();
+          var dd = today.getDate();
+          var mm = today.getMonth() + 1;
+          var yyyy = today.getFullYear();
+
+          if (dd < 10) {
+              dd = '0' + dd;
+          }
+
+          if (mm < 10) {
+              mm = '0' + mm;
+          }
+
+          var today = dd + '/' + mm + '/' + yyyy;
+          return today;
+        }
       });
     </script>
   </body>
