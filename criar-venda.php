@@ -157,7 +157,7 @@
                   <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
                     <div class="input-group">
                       <span class="input-group-addon"><i class="fa fa-shopping-cart" aria-hidden="true"></i></span>
-                      <input name="vendaQuantidade" class="form-control" type="text" placeholder="0">
+                      <input name="vendaQuantidade" class="form-control" type="text" onkeypress="validate(event)" placeholder="0" />
                     </div>
                   </div>
                 </div>
@@ -424,6 +424,19 @@
           return today;
         }
       });
+    </script>
+
+    <script>
+      function validate(e) {
+        var ev = e || window.event;
+        var key = ev.keyCode || ev.which;
+        key = String.fromCharCode( key );
+        var regex = /[0-9]/;
+        if( !regex.test(key) ) {
+          ev.returnValue = false;
+          if(ev.preventDefault) ev.preventDefault();
+        }
+      }
     </script>
   </body>
 </html>

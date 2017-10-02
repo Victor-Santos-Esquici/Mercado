@@ -104,7 +104,7 @@
                   echo  "<td class='venda vendaID' data-id='" . $value['ID'] . "'>" . $value['ID'] . "</td>";
                   echo  "<td class='venda vendaTotal'>" . $value['Total'] . "</td>";
                   echo  "<td class='venda vendaData'>" . $value['Data'] . "</td>";
-                  echo  "<td class='text-center'><a href='#deleteModal' class='btnDelete'><i class='fa fa-trash' aria-hidden='true'></i></a></td>";
+                  echo  "<td class='text-center'><a " . (isset($_SESSION['usuarioID']) != "" ? "href='#deleteModal'" : "href='login.php' data-toggle='tooltip' data-placement='left' title='Você precisa estar logado para deletar.'") . " class='btnDelete'><i class='fa fa-trash' aria-hidden='true'></i></a></td>";
                   echo "</tr>";
                 }
               ?>

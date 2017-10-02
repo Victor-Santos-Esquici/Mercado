@@ -24,6 +24,7 @@
 
     <!-- Custom styles for this template -->
     <link href="css/sb-admin.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/buttons.dataTables.min.css">
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/png" href="img/shopping-icon.png"/>  
@@ -146,9 +147,11 @@
           <a class="btn btn-success form-group btnCreate" <?php echo (isset($_SESSION['usuarioID']) != "" ? "href='#editModal'" : "href='login.php' data-toggle='tooltip' title='Você precisa estar logado para cadastrar.'"); ?>>
             <span><i class="fa fa-plus" aria-hidden="true"></i> Novo Produto</span>
           </a>
+
+          <a class="btn btn-success form-group" href="criar-venda.php"><span><i class="fa fa-dollar" aria-hidden="true"></i> Nova Venda</span></a>
                   
           <br>
-          
+
           <table id="dataTable" class="table table-bordered" width="100%" id="dataTable" cellspacing="0">
             <thead>
               <tr>
@@ -303,16 +306,74 @@
 
     <!-- Custom scripts for this template -->
     <script src="js/sb-admin.js"></script>
+    <script src="js/dataTables.buttons.min.js"></script>
 
     <script>
       $(document).ready(function(){
-        $("#dataTable").DataTable({
+
+        var table = $("#dataTable").DataTable({
           "language": {
             "url": "json/Portuguese-Brasil.json"
           },
           "aoColumnDefs": [
             { "bSearchable": false, "aTargets": [ 0, 3, 4, 5 ] },
             { "bSortable": false, "aTargets": [ 7 ] }
+          ],
+          dom: 'Bfrtip',
+          buttons: [
+            {
+              text: 'Todos',
+              action: function (e, dt, node, config) {
+                this.buttons().enable();
+                this.disable();
+                this.columns().search("").draw();
+              }
+            },
+            {
+              text: 'Saldo Positivo',
+              action: function (e, dt, node, config) {
+                this.buttons().enable();
+                this.disable();
+                this.columns().search("").draw();
+                this.column(6).search("^[0-9]*[1-9][0-9]*$", true, false).draw();
+              }
+            },
+            {
+              text: 'Saldo Negativo',
+              action: function (e, dt, node, config) {
+                this.buttons().enable();
+                this.disable();
+                this.columns().search("").draw();
+                this.column(6).search("^\-?[1-9]\d{0,2}$", true, false).draw();
+              }
+            },
+            {
+              text: 'Saldo Zerado',
+              action: function (e, dt, node, config) {
+                this.buttons().enable();
+                this.disable();
+                this.columns().search("").draw();
+                this.column(6).search("^0$", true, false).draw();
+              }
+            },
+            {
+              text: 'Mais Vendidos',
+              action: function (e, dt, node, config) {
+                this.buttons().enable();
+                this.disable();
+                this.columns().search("").draw();
+                this.order([5, 'desc']).draw();
+              }
+            },
+            {
+              text: 'Menos Vendidos',
+              action: function (e, dt, node, config) {
+                this.buttons().enable();
+                this.disable();
+                this.columns().search("").draw();
+                this.order([5, 'asc']).draw();
+              }
+            }
           ]
         });
 
