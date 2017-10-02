@@ -91,7 +91,7 @@
         }
         else
         {
-          $alertMessage = "Produto com sucesso no estoque!";
+          $alertMessage = "Produto inserido com sucesso!";
         }
       }
     }
@@ -260,7 +260,7 @@
 
           <div class="form-group">
             <div class="col-md-12 text-center">
-              <button type="submit" class="btn btn-primary">Enviar <i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+              <button type="submit" class="btn btn-primary" style="cursor: pointer;">Enviar <i class="fa fa-paper-plane" aria-hidden="true"></i></button>
             </div>
           </div>
         </fieldset>

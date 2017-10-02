@@ -150,7 +150,7 @@
 
                           <div class="col-xs-6">
                             <div class="col-md-12 text-center">
-                              <button class="btn btn-success btn-sm" style="margin-top: 3px;" <?php echo (isset($_SESSION['usuarioID']) != "" ? "type='submit'" : "type='button' data-toggle='tooltip' title='Você precisa estar logado para cadastrar.'"); ?>>
+                              <button class="btn btn-success btn-sm" style="margin-top: 3px; cursor: pointer;" <?php echo (isset($_SESSION['usuarioID']) != "" ? "type='submit'" : "type='button' data-toggle='tooltip' title='Você precisa estar logado para cadastrar.'"); ?>>
                                 <span><i class="fa fa-plus" aria-hidden="true"></i> Adicionar</span>
                               </button>    
                             </div> 

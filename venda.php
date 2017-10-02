@@ -17,10 +17,6 @@
     <!-- Custom fonts for this template -->
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
-    <!-- Plugin CSS -->
-    <link href="css/remodal.css" rel="stylesheet" type="text/css">
-    <link href="css/remodal-default-theme.css" rel="stylesheet" type="text/css">
-
     <!-- Custom styles for this template -->
     <link href="css/sb-admin.css" rel="stylesheet">
 
@@ -34,14 +30,22 @@
     $vendaID = $_GET['id'];
 
     //read
-
     $consulta = $conexao->prepare("SELECT vendas.Data, sum(produtos.Valor * vendas_itens.Quantidade) as Total FROM vendas JOIN vendas_itens on vendas.ID = vendas_itens.VendaID JOIN produtos on vendas_itens.ProdutoID = produtos.ID WHERE vendas.ID = ? GROUP BY vendas_itens.VendaID");
     $consulta->execute(array($vendaID));
     $registrosVenda = $consulta->fetchAll();
 
-    $consulta = $conexao->prepare("SELECT produtos.ID, produtos.Nome, tipos.Nome as TipoNome, produtos.Valor, vendas_itens.Quantidade FROM vendas_itens JOIN produtos on vendas_itens.ProdutoID = produtos.ID JOIN tipos on produtos.Tipo = tipos.ID WHERE vendas_itens.VendaID = ?");
+    $consulta = $conexao->prepare("SELECT produtos.ID, produtos.Nome, tipos.Nome as Tipo, produtos.Valor, vendas_itens.Quantidade, (produtos.Valor * vendas_itens.Quantidade) as Total FROM vendas_itens JOIN produtos on vendas_itens.ProdutoID = produtos.ID JOIN tipos on produtos.Tipo = tipos.ID WHERE vendas_itens.VendaID = ?");
     $consulta->execute(array($vendaID));
     $registrosProdutos = $consulta->fetchAll();
+
+    $vendaData = "";
+    $vendaTotal = "";
+
+    foreach ($registrosVenda as $key => $value)
+    {
+      $vendaData = $value['Data'];
+      $vendaTotal = $value['Total'];
+    }
   ?>
 
   <body class="fixed-nav sticky-footer bg-dark" id="page-top">
@@ -58,50 +62,127 @@
           <li class="breadcrumb-item active">Venda</li>
         </ol>
 
-        <div class="col-md-12">
+        <!--content-->
+        <div class="container">
+          <div class="row">
+            <fieldset class="col-md-12">
+              <legend class="text-center">Venda Nº <?php echo $vendaID; ?></legend>
 
-          <!--content-->
-          <div class="panel panel-default">
-            <h2>Venda Nº <?php echo $vendaID;?></h2>
-            <hr>
+              <div class="form-group">
+                <label class="col-md-12">Data</label>  
+                <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-calendar" aria-hidden="true"></i></span>
+                    <input id="vendaData" name="vendaData" class="form-control" type="text" value="<?php echo $vendaData?>" disabled>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-md-12">Total</label>
+                <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-dollar" aria-hidden="true"></i></span>
+                    <input name="vendaTotal" class="form-control" type="text" value="<?php echo $vendaTotal?>" disabled>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="row">
+            <fieldset class="col-md-12">
+              <legend class="text-center">Produtos</legend>
+
+              <div class="row">
+                <div class="form-group col-md-3">
+                  <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
+                    <div class="input-group">
+                      <label class="col-md-12">Produto</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group col-md-3">
+                  <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
+                    <div class="input-group">
+                      <label class="col-md-12">Tipo</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group col-md-2">
+                  <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
+                    <div class="input-group">
+                      <label class="col-md-12">Valor</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group col-md-2">
+                  <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
+                    <div class="input-group">
+                        <label class="col-md-12">Quantidade</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group col-md-2">
+                  <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
+                    <div class="input-group">
+                      <label class="col-md-12">Total</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <?php
-                foreach ($registrosVenda as $key => $value)
-                {
-                  echo "<p>Data: <span id='vendaData'>" . $value['Data'] . "</span></p>";
-                  echo "<p>Total: R$ <span id='vendaValor'>" . $value['Total'] . "</span></p>";
+                foreach ($registrosProdutos as $key => $value) {
+                  echo 
+                  "<div class='row'>" .
+                    "<div class='form-group col-md-3'>" . 
+                      "<div class='col-md-12 center-block text-center pagination-centered inputGroupContainer'>" .
+                        "<div class='input-group'>" .
+                          "<span class='input-group-addon'><i class='fa fa-shopping-basket' aria-hidden='true'></i></span>" .
+                          "<input class='form-control' name='produtoNome' type='text' value='" . $value['Nome'] . "' disabled>" .
+                        "</div>" .
+                      "</div>" .
+                    "</div>" .
+                    "<div class='form-group col-md-3'>" .
+                      "<div class='col-md-12 center-block text-center pagination-centered inputGroupContainer'>" .
+                        "<div class='input-group'>" .
+                          "<span class='input-group-addon'><i class='fa fa-dollar' aria-hidden='true'></i></span>" .
+                          "<input class='form-control' name='produtoValor' type='text' value='" . $value['Tipo'] . "' disabled>" .
+                        "</div>" .
+                      "</div>" .
+                    "</div>" .
+                    "<div class='form-group col-md-2'>" .
+                      "<div class='col-md-12 center-block text-center pagination-centered inputGroupContainer'>" .
+                        "<div class='input-group'>" .
+                          "<span class='input-group-addon'><i class='fa fa-dollar' aria-hidden='true'></i></span>" .
+                          "<input class='form-control' name='produtoValor' type='text' value='" . $value['Valor'] . "' disabled>" .
+                        "</div>" .
+                      "</div>" .
+                    "</div>" .
+                    "<div class='form-group col-md-2'>" .
+                      "<div class='col-md-12 center-block text-center pagination-centered inputGroupContainer'>" .
+                        "<div class='input-group'>" .
+                          "<span class='input-group-addon'><i class='fa fa-shopping-cart' aria-hidden='true'></i></span>" .
+                          "<input class='form-control' name='produtoQuantidade' type='text' value='" . $value['Quantidade'] . "' disabled>" .
+                        "</div>" .
+                      "</div>" .
+                    "</div>" .
+                    "<div class='form-group col-md-2'>" .
+                      "<div class='col-md-12 center-block text-center pagination-centered inputGroupContainer'>" .
+                        "<div class='input-group'>" .
+                          "<span class='input-group-addon'><i class='fa fa-dollar' aria-hidden='true'></i></span>" .
+                          "<input class='form-control' name='produtoTotal' type='text' value='" . $value['Total'] . "' disabled>" .
+                        "</div>" .
+                      "</div>" .
+                    "</div>" .
+                  "</div>";
                 }
               ?>
-
-              <h3>Produtos</h3>
-
-              <table border="1">
-                <thead>
-                  <tr>
-                    <td>Código</td>
-                    <td>Nome</td>
-                    <td>Tipo</td>
-                    <td>Valor</td>
-                    <td>Quantidade</td>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <?php
-                    foreach ($registrosProdutos as $key => $value) 
-                    {
-                      echo "<tr>";
-                      echo  "<td>" . $value['ID'] . "</td>";
-                      echo  "<td>" . $value['Nome'] . "</td>";
-                      echo  "<td>" . $value['TipoNome'] . "</td>";
-                      echo  "<td class='vendaValor'>" . $value['Valor'] . "</td>";
-                      echo  "<td>" . $value['Quantidade'] . "</td>";
-                      echo "</tr>";
-                    }
-                  ?>
-                </tbody>
-              </table>
-            </div>
-          <br>
+            </fieldset>
+          </div>
         </div>
       </div>
     </div>
@@ -115,9 +196,6 @@
 
     <!-- Plugin JavaScript -->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-    <script src="vendor/datatables/jquery.dataTables.js"></script>
-    <script src="vendor/datatables/dataTables.bootstrap4.js"></script>
-    <script src="js/jquery.mask.min.js"></script>
     <script src="js/remodal.js"></script>
 
     <!-- Custom scripts for this template -->
@@ -125,13 +203,10 @@
 
     <script>
       $(document).ready(function(){
-        var data = new Date($("#vendaData")[0].innerHTML);
+        var data = new Date($("#vendaData").val());
         var dataFormatada = data.getUTCDate() + "/" + (returnDate(data.getMonth()+1)) + "/" + data.getFullYear();
 
-        $("#vendaData")[0].innerHTML = dataFormatada;
-
-        $("#vendaValor").mask("00.000,00", {reverse: true});
-        $(".vendaValor").mask("00.000,00", {reverse: true});
+        $("#vendaData").val(dataFormatada);
 
         function returnDate(month) {
           if (month < 10) {
@@ -140,14 +215,6 @@
 
           return month;
         }
-
-        $(".btnDelete").click(function() {
-          var item = $(this).closest("tr");
-          var produtoID = $(item).find(".produtoID").data("id");
-          var produtoNome = $(item).find(".produtoNome").html();
-          $("input[name='produtoID']").val(produtoID);
-          $(".deleteProduto").empty().append(produtoNome);
-        });
       });
     </script>
   </body>

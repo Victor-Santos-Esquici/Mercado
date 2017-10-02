@@ -33,92 +33,23 @@
     include ("includes/dbconnect.php");
     $alertMessage = "";
 
-    /*
-    if (isset($_POST['produtoNome']))
-    {
-      if ($_POST['produtoID'] > 0) //edit
-      {
-        if (!isset($_SESSION['usuarioID']) != "")
-        {
-          header("Location: index.php#alertModal");
-        }
+    if (isset($_POST['vendaID'])) //delete
+    {      
+      $vendaID = $_POST['vendaID'];
 
-        $produtoID = $_POST['produtoID'];
-        $produtoNome = $_POST['produtoNome'];
-        $produtoTipo = $_POST['produtoTipo'];
-        $produtoValor = $_POST['produtoValor'];
-        $produtoEstoque = $_POST['produtoEstoque'];
-
-        $produtoValor = str_replace(".", "", $produtoValor);
-        $produtoValor = str_replace(",", ".", $produtoValor);
-        print_r($produtoValor);
-
-        $consulta = $conexao->prepare("UPDATE produtos SET Nome = ?, Tipo = ?, Valor = ?, Estoque = ? WHERE ID = ?");
-        $consulta->execute(array($produtoNome, $produtoTipo, $produtoValor, $produtoEstoque, $produtoID));
-        $resultado = $consulta->rowCount();
-        
-        if ($resultado == 0)
-        {
-          $alertMessage = "Falha ao atualizar o registro.";
-        }
-        else
-        {
-          $alertMessage = "Registro atualizado com sucesso!";
-        }
-      }
-      else //insert
-      {
-        if (!isset($_SESSION['usuarioID']) != "")
-        {
-          header("Location: index.php#alertModal");
-        }
-
-        $produtoNome = $_POST['produtoNome'];
-        $produtoTipo = $_POST['produtoTipo'];
-        $produtoValor = $_POST['produtoValor'];
-        $produtoEstoque = $_POST['produtoEstoque'];
-
-        $produtoValor = str_replace(".", "", $produtoValor);
-        $produtoValor = str_replace(",", ".", $produtoValor);
-        $produtoEstoque = str_replace(".", "", $produtoEstoque);
-
-        $consulta = $conexao->prepare("INSERT INTO produtos (Nome, Tipo, Valor, Estoque) VALUES (?,?,?,?)");
-        $consulta->execute(array($produtoNome, $produtoTipo, $produtoValor, $produtoEstoque));
-        $resultado = $consulta->rowCount();
-
-        if ($resultado == 0)
-        {
-          $alertMessage = "Falha ao inserir o novo registro.";
-        }
-        else
-        {
-          $alertMessage = "Registro inserido com sucesso!";
-        }
-      }
-    }
-    elseif (isset($_POST['produtoID'])) //delete
-    {
-      if (!isset($_SESSION['usuarioID']) != "")
-      {
-        header("Location: index.php#alertModal");
-      }
-      
-      $produtoID = $_POST['produtoID'];
-
-      $consulta = $conexao->prepare("DELETE FROM produtos WHERE ID = ?");
-      $consulta->execute(array($produtoID));
+      $consulta = $conexao->prepare("DELETE FROM vendas_itens WHERE vendaID = ?; DELETE FROM vendas WHERE ID = ?;");
+      $consulta->execute(array($vendaID, $vendaID));
       $resultado = $consulta->rowCount();
 
       if ($resultado == 0)
       {
-        $alertMessage = "Falha ao deletar o registro!";
+        $alertMessage = "Falha ao cancelar a venda!";
       }
       else
       {
-        $alertMessage = "Registro deletado com sucesso!";
+        $alertMessage = "Venda cancelada com sucesso!";
       }
     }
-    */
 
     //read
     $consulta = $conexao->prepare("SELECT vendas.ID, vendas.Data, sum(produtos.Valor * vendas_itens.Quantidade) AS Total FROM vendas JOIN vendas_itens ON vendas.ID = vendas_itens.VendaID JOIN produtos ON produtos.ID = vendas_itens.ProdutoID GROUP BY vendas_itens.VendaID");
@@ -185,11 +116,11 @@
     </div>
 
     <div class="remodal" data-remodal-id="deleteModal">
-      <form action="produtos.php#alertModal" method="post">
-        <input type="hidden" name="produtoID" value="">
+      <form action="vendas.php#alertModal" method="post">
+        <input type="hidden" name="vendaID" value="">
         <button data-remodal-action="close" class="remodal-close"></button>
-        <h2>Deseja deletar este produto?</h2>
-        <p class="deleteProduto"></p>
+        <h2>Deseja cancelar esta venda?</h2>
+        <p class="deleteVenda"></p>
         <br>
         <button data-remodal-action="cancel" class="remodal-cancel">Não</button>
         <button type="submit" class="remodal-confirm">Sim</button>
@@ -248,105 +179,24 @@
         var yyyy = today.getFullYear();
 
         if (dd < 10) {
-            dd='0'+dd;
+            dd = '0' + dd;
         }
 
         if (mm < 10) {
-            mm='0'+mm;
+            mm = '0' + mm;
         }
 
         var today = dd + '/' + mm + '/' + yyyy;
         
         $("input[name='vendaData']").val(today);
-
-        /*$('#produtoCadastro').bootstrapValidator({
-          // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
-          feedbackIcons: {
-            valid: 'fa fa-check',
-            invalid: 'fa fa-times',
-            validating: 'glyphicon glyphicon-refresh'
-          },
-          fields: {
-            produtoNome: {
-              validators: {
-                stringLength: {
-                  message: 'O nome deve conter no mínimo 2 caracteres.',
-                  min: 2,
-                },
-                notEmpty: {
-                  message: 'Preencha o nome do produto.'
-                }
-              }
-            },
-            produtoTipo: {
-              validators: {
-                notEmpty: {
-                  message: 'Selecione um tipo.'
-                }
-              }
-            },
-            produtoValor: {
-              validators: {
-                notEmpty: {
-                  message: 'Preencha o valor do produto.'
-                }
-              }
-            },
-            produtoEstoque: {
-              validators: {
-                notEmpty: {
-                  message: 'Preencha o estoque do produto.'
-                }
-              }
-            }
-          }
-        })
-        .on('success.form.bv', function(e) {
-          $('#success_message').slideDown({ opacity: "show" }, "slow") // Do something ...
-            $('#produtoCadastro').data('bootstrapValidator').resetForm();
-
-          // Prevent form submission
-          e.preventDefault();
-
-          // Get the form instance
-          var $form = $(e.target);
-
-          // Get the BootstrapValidator instance
-          var bv = $form.data('bootstrapValidator');
-
-          // Use Ajax to submit form data
-          $.post($form.attr('action'), $form.serialize(), function(result) {
-            console.log(result);
-          }, 'json');
-        });
-
-        //inputs
-        $("#produtoValor").mask("00.000,00", {reverse: true});
-        $("#produtoEstoque").mask("000.000", {reverse: true});
-        
-        //fields
-        $(".produtoValor").mask("00.000,00", {reverse: true});
-        $(".produtoEstoque").mask("000.000", {reverse: true});
-
-
-        $(".btnCreate").click(function() {
-          $("#modalTitle").text("Cadastrar Produto");
-
-          $("input[name='produtoID']").val("");
-          $("input[name='produtoNome']").val("");
-          $("select[name='produtoTipo'] option").removeAttr("selected");
-          $("option[value=' ']").attr("selected", "selected");
-          $("input[name='produtoValor']").val("");
-          $("input[name='produtoEstoque']").val("");
-        });
         
         $(".btnDelete").click(function() {
           var item = $(this).closest("tr");
-          var produtoID = $(item).find(".produtoID").data("id");
-          var produtoNome = $(item).find(".produtoNome").html();
-          $("input[name='produtoID']").val(produtoID);
-          $(".deleteProduto").empty().append(produtoNome);
-        });*/
+          var vendaID = $(item).find(".vendaID").data("id");
+
+          $("input[name='vendaID']").val(vendaID);
+          $(".deleteVenda").empty().append("Código: " + vendaID);
+        });
       });
     </script>
   </body>

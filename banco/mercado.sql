@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 23-Set-2017 às 22:43
+-- Generation Time: 02-Out-2017 às 02:21
 -- Versão do servidor: 10.1.9-MariaDB
 -- PHP Version: 5.6.15
 
@@ -124,7 +124,7 @@ CREATE TABLE `vendas_itens` (
 
 INSERT INTO `vendas_itens` (`ID`, `ProdutoID`, `VendaID`, `Quantidade`) VALUES
 (1, 1, 1, 10),
-(2, 2, 2, 50),
+(2, 2, 1, 50),
 (3, 3, 1, 100),
 (4, 4, 2, 801),
 (5, 5, 2, 274),

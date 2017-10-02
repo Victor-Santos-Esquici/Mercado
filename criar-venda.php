@@ -17,6 +17,10 @@
     <!-- Custom fonts for this template -->
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
+    <!-- Plugin CSS -->
+    <link href="css/remodal.css" rel="stylesheet" type="text/css">
+    <link href="css/remodal-default-theme.css" rel="stylesheet" type="text/css">
+
     <!-- Custom styles for this template -->
     <link href="css/sb-admin.css" rel="stylesheet">
 
@@ -27,6 +31,51 @@
   <?php
     include ("includes/dbconnect.php");
     $alertMessage = "";
+
+    if (isset($_POST['produtosID'])) //insert
+    {
+      $produtosID = $_POST['produtosID'];
+      $produtosID = rtrim($produtosID, ",");
+      $produtosID = explode(",", $produtosID);
+
+      $produtosQuantidade = $_POST['produtosQuantidade'];
+      $produtosQuantidade = rtrim($produtosQuantidade, ",");
+      $produtosQuantidade = explode(",", $produtosQuantidade);
+
+      $consulta = $conexao->prepare("INSERT INTO vendas (Data) VALUES (CURRENT_TIMESTAMP)");
+      $consulta->execute();
+      $resultado = $consulta->rowCount();
+      $vendaID = $conexao->lastInsertId();
+
+      if ($resultado == 0)
+      {
+        $alertMessage = "Falha ao cadastrar a venda.";
+      }
+      else
+      {
+        $alertMessage = "Venda cadastrada com sucesso!";
+      }
+
+      for ($i = 0; $i < count($produtosID); $i++)
+      { 
+        $produtoQuantidade = end(explode(":", $produtosQuantidade[$i]));
+        $consulta = $conexao->prepare("INSERT INTO vendas_itens (ProdutoID, VendaID, Quantidade) VALUES (?,?,?)");
+        $consulta->execute(array($produtosID[$i], $vendaID, $produtoQuantidade));
+        $resultado = $consulta->rowCount();
+
+        if ($resultado == 0)
+        {
+          $consulta = $conexao->prepare("DELETE FROM vendas_itens WHERE VendaID = ?");
+          $consulta->execute(array($vendaID));
+
+          $consulta = $conexao->prepare("DELETE FROM vendas WHERE ID = ?");
+          $consulta->execute(array($vendaID));
+
+          $alertMessage = "Falha ao cadastrar a venda.";
+          break;
+        }
+      }
+    }
 
     //read
     $consulta = $conexao->prepare("SELECT * FROM produtos");
@@ -116,7 +165,7 @@
                 <div class="form-group col-md-1">
                   <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
                     <div class="input-group">
-                      <button type="submit" class="btn btn-primary btnAdd" style="margin-top: 32px; cursor: pointer;"><i class="fa fa-plus" aria-hidden="true"> </i></button>
+                      <button type="submit" class="btn btn-primary btnAdd" style="margin-top: 32px; cursor: pointer;"><i class="fa fa-plus" aria-hidden="true"></i></button>
                     </div>
                   </div>
                 </div>
@@ -125,11 +174,12 @@
           </div>
         </div>
 
-        <form>
+        <form id="vendaCadastro" action="criar-venda.php#alertModal" method="post">
           <input type="hidden" name="produtosID">
+          <input type="hidden" name="produtosQuantidade">
           <div class="form-group">
             <div class="col-md-12 text-center">
-              <button type="button" class="btn btn-success">Vender <i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+              <button id="btnVenda" type="button" class="btn btn-success" style="cursor: pointer;">Vender <i class="fa fa-paper-plane" aria-hidden="true"></i></button>
             </div>
           </div>
         </form>
@@ -167,11 +217,35 @@
         $("input[name='vendaData']").val(getToday());
 
         $(".input-group").on("click", ".btnAdd", function() {
-
           var produtoID = $("#produtoNome").val();
+          var produtoQuantidade = $("input[name='vendaQuantidade']").val();
+
+          if (produtoID == " ") {
+            $("#produtoNome").closest(".form-group").addClass("has-error");
+
+            if (produtoQuantidade == "") {
+              $("input[name='vendaQuantidade']").closest(".form-group").addClass("has-error");
+            }
+            else {
+              $("input[name='vendaQuantidade']").closest(".form-group").removeClass("has-error");
+            }
+
+            return false;
+          }
+          else {
+            $("#produtoNome").closest(".form-group").removeClass("has-error");
+          }
+
+          if (produtoQuantidade == "") {
+            $("input[name='vendaQuantidade']").closest(".form-group").addClass("has-error");
+            return false;
+          }
+          else {
+            $("input[name='vendaQuantidade']").closest(".form-group").removeClass("has-error");
+          }
+
           var produtoNome = $("#produtoNome option:selected").text();
           var produtoValor = $("#produtoNome option:selected").data("valor");
-          var produtoQuantidade = $("input[name='vendaQuantidade']").val();
           var vendaTotal = parseFloat($("input[name='vendaTotal']").val());
           var produtoTotal = (produtoValor * produtoQuantidade).toFixed(2);
           vendaTotal += produtoValor * produtoQuantidade;
@@ -180,6 +254,10 @@
           var produtosID = $("input[name='produtosID']").val();
           produtosID += produtoID + ",";
           $("input[name='produtosID']").val(produtosID);
+
+          var produtosQuantidade = $("input[name='produtosQuantidade']").val();
+          produtosQuantidade += produtoID + ":" + produtoQuantidade + ",";
+          $("input[name='produtosQuantidade']").val(produtosQuantidade);
 
           if ($(".newProduct").children().length == 0) {
             $(".newProduct").append(
@@ -253,7 +331,7 @@
               "<div class='form-group col-md-1'>" + 
                 "<div class='col-md-12 center-block text-center pagination-centered inputGroupContainer'>" +
                   "<div class='input-group'>" +
-                    "<button type='button' class='btn btn-danger btnRemove' data-produto-id='" + produtoID + "' style='cursor: pointer;'><i class='fa fa-close' aria-hidden='true'> </i></button>" +
+                    "<button type='button' class='btn btn-danger btnRemove' data-produto-id='" + produtoID + "' style='cursor: pointer;'><i class='fa fa-close' aria-hidden='true'></i></button>" +
                   "</div>" + 
                 "</div>" +
               "</div>" +
@@ -272,6 +350,7 @@
           var produtoNome = $(this).closest(".row").find("input[name='produtoNome']").val();
           var produtoValor = $(this).closest(".row").find("input[name='produtoValor']").val();
           var produtoTotal = $(this).closest(".row").find("input[name='produtoTotal']").val();
+          var produtoQuantidade = $(this).closest(".row").find("input[name='produtoQuantidade']").val();
           var vendaTotal = $("input[name='vendaTotal']").val();
           vendaTotal -= produtoTotal;
           vendaTotal = Number(vendaTotal).toFixed(2);
@@ -289,6 +368,10 @@
           var produtosID = $("input[name='produtosID']").val();
           produtosID = produtosID.replace(produtoID + ",", "");
           $("input[name='produtosID']").val(produtosID);
+
+          var produtosQuantidade = $("input[name='produtosQuantidade']").val();
+          produtosQuantidade = produtosQuantidade.replace(produtoID + ":" + produtoQuantidade + ",", "");
+          $("input[name='produtosQuantidade']").val(produtosQuantidade);
 
           $("input[name='vendaTotal']").val(vendaTotal);
 
@@ -308,6 +391,19 @@
           });
 
           $("#produtoNome").html(selectList);
+          $("#produtoNome").val(" ");
+        });
+
+        $("#btnVenda").click(function() {
+          if ($("input[name='produtosID']").val() == "") {
+            return false;
+          }
+
+          if($("input[name='produtosQuantidade']").val() == "") {
+            return false;
+          }
+
+          $("#vendaCadastro").submit();
         });
 
         function getToday() {
