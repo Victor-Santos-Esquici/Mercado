@@ -72,7 +72,7 @@
 
         <div class="col-md-12">
           <a href="criar-venda.php" class="btn btn-success form-group btnCreate">
-            <span><i class="fa fa-plus" aria-hidden="true"></i> Vender</span>
+            <span><i class="fa fa-dollar" aria-hidden="true"></i> Nova Venda</span>
           </a>
                 
           <br>
