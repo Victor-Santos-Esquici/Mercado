@@ -311,7 +311,7 @@
     <script>
       $(document).ready(function(){
 
-        var table = $("#dataTable").DataTable({
+        $("#dataTable").DataTable({
           "language": {
             "url": "json/Portuguese-Brasil.json"
           },
