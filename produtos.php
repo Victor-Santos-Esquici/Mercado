@@ -148,36 +148,34 @@
         </ol>
 
         <div class="col-md-12">
-
-          <div class="container">
-            <div class="row">
-              <div class="" style="margin-right: 20px;">
-                <a class="btn btn-success form-group btnCreate" <?php echo (isset($_SESSION['usuarioID']) != "" ? "href='#editModal'" : "href='login.php' data-toggle='tooltip' title='Você precisa estar logado para cadastrar.'"); ?>>
-                  <span><i class="fa fa-plus" aria-hidden="true"></i> Novo Produto</span>
-                </a>
-              </div>
-
-              <div class="" style="margin-right: 20px;">
-                <a class="btn btn-success form-group" href="criar-venda.php"><span><i class="fa fa-dollar" aria-hidden="true"></i> Nova Venda</span></a>
-              </div>
-
-              <div class="" style="margin-right: 20px;">
-                <div class="input-group">
-                  <span class="input-group-addon"><i class="fa fa-shopping-basket" aria-hidden="true"></i></span>
-                  <input class="form-control" type="text" name="searchProduto" placeholder="Pesquisar Produto">
+          <div class="col-md-12">
+              <div class="row">
+                <div class="" style="margin-right: 20px; margin-left: 1rem;">
+                  <a class="btn btn-success form-group btnCreate" <?php echo (isset($_SESSION['usuarioID']) != "" ? "href='#editModal'" : "href='login.php' data-toggle='tooltip' title='Você precisa estar logado para cadastrar.'"); ?>>
+                    <span><i class="fa fa-plus" aria-hidden="true"></i> Novo Produto</span>
+                  </a>
                 </div>
-              </div>
 
-              <div class="" style="margin-right: 20px;">
-                <div class="input-group">
-                  <span class="input-group-addon"><i class="fa fa-list-alt" aria-hidden="true"></i></span>
-                  <input class="form-control" type="text" name="searchTipo" placeholder="Pesquisar Tipo">
+                <div class="" style="margin-right: 20px;">
+                  <a class="btn btn-success form-group" href="criar-venda.php"><span><i class="fa fa-dollar" aria-hidden="true"></i> Nova Venda</span></a>
                 </div>
-              </div>
 
-            </div>
+                <div class="" style="margin-right: 20px;">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-shopping-basket" aria-hidden="true"></i></span>
+                    <input class="form-control" type="text" name="searchProduto" placeholder="Pesquisar Produto">
+                  </div>
+                </div>
+
+                <div class="" style="margin-right: 20px;">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-list-alt" aria-hidden="true"></i></span>
+                    <input class="form-control" type="text" name="searchTipo" placeholder="Pesquisar Tipo">
+                  </div>
+                </div>
+
+              </div>
           </div>
-          
 
           <table id="dataTable" class="table table-bordered" width="100%" id="dataTable" cellspacing="0">
             <thead>
