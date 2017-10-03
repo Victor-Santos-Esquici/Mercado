@@ -27,7 +27,11 @@
     <link rel="stylesheet" type="text/css" href="css/buttons.dataTables.min.css">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/png" href="img/shopping-icon.png"/>  
+    <link rel="shortcut icon" type="image/png" href="img/shopping-icon.png"/>
+
+    <style type="text/css">
+      .dataTables_filter, .dataTables_info { display: none; }
+    </style>
   </head>
 
   <?php
@@ -144,13 +148,36 @@
         </ol>
 
         <div class="col-md-12">
-          <a class="btn btn-success form-group btnCreate" <?php echo (isset($_SESSION['usuarioID']) != "" ? "href='#editModal'" : "href='login.php' data-toggle='tooltip' title='Você precisa estar logado para cadastrar.'"); ?>>
-            <span><i class="fa fa-plus" aria-hidden="true"></i> Novo Produto</span>
-          </a>
 
-          <a class="btn btn-success form-group" href="criar-venda.php"><span><i class="fa fa-dollar" aria-hidden="true"></i> Nova Venda</span></a>
-                  
-          <br>
+          <div class="container">
+            <div class="row">
+              <div class="" style="margin-right: 20px;">
+                <a class="btn btn-success form-group btnCreate" <?php echo (isset($_SESSION['usuarioID']) != "" ? "href='#editModal'" : "href='login.php' data-toggle='tooltip' title='Você precisa estar logado para cadastrar.'"); ?>>
+                  <span><i class="fa fa-plus" aria-hidden="true"></i> Novo Produto</span>
+                </a>
+              </div>
+
+              <div class="" style="margin-right: 20px;">
+                <a class="btn btn-success form-group" href="criar-venda.php"><span><i class="fa fa-dollar" aria-hidden="true"></i> Nova Venda</span></a>
+              </div>
+
+              <div class="" style="margin-right: 20px;">
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-shopping-basket" aria-hidden="true"></i></span>
+                  <input class="form-control" type="text" name="searchProduto" placeholder="Pesquisar Produto">
+                </div>
+              </div>
+
+              <div class="" style="margin-right: 20px;">
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-list-alt" aria-hidden="true"></i></span>
+                  <input class="form-control" type="text" name="searchTipo" placeholder="Pesquisar Tipo">
+                </div>
+              </div>
+
+            </div>
+          </div>
+          
 
           <table id="dataTable" class="table table-bordered" width="100%" id="dataTable" cellspacing="0">
             <thead>
@@ -246,7 +273,7 @@
             <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
               <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-usd" aria-hidden="true"></i></span>
-                <input id="produtoValor" name="produtoValor" placeholder="10,00" class="form-control" type="text">
+                <input id="produtoValor" name="produtoValor" placeholder="10,00" class="form-control" onkeypress="validate(event)" type="text">
               </div>
             </div>
           </div>
@@ -256,7 +283,7 @@
             <div class="col-md-12 center-block text-center pagination-centered inputGroupContainer">
               <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-shopping-cart" aria-hidden="true"></i></span>
-                <input id="produtoEstoque" name="produtoEstoque" placeholder="50" class="form-control" type="text">
+                <input id="produtoEstoque" name="produtoEstoque" placeholder="50" class="form-control" onkeypress="validate(event)" type="text">
               </div>
             </div>
           </div>
@@ -311,12 +338,12 @@
     <script>
       $(document).ready(function(){
 
-        $("#dataTable").DataTable({
+        var table = $("#dataTable").DataTable({
           "language": {
             "url": "json/Portuguese-Brasil.json"
           },
           "aoColumnDefs": [
-            { "bSearchable": false, "aTargets": [ 0, 3, 4, 5 ] },
+            { "bSearchable": false, "aTargets": [ 0, 3, 4, 5, 7 ] },
             { "bSortable": false, "aTargets": [ 7 ] }
           ],
           dom: 'Bfrtip',
@@ -335,7 +362,7 @@
                 this.buttons().enable();
                 this.disable();
                 this.columns().search("").draw();
-                this.column(6).search("^[0-9]*[1-9][0-9]*$", true, false).draw();
+                this.column(6).search("^[1-9][0-9]*$", true, false).draw();
               }
             },
             {
@@ -344,7 +371,7 @@
                 this.buttons().enable();
                 this.disable();
                 this.columns().search("").draw();
-                this.column(6).search("^\-?[1-9]\d{0,2}$", true, false).draw();
+                this.column(6).search("^\-[0-9]*$", true, false).draw();
               }
             },
             {
@@ -376,6 +403,16 @@
             }
           ]
         });
+
+        $("input[name='searchProduto']").on("keyup", function () {
+          table.column(1).search(this.value).draw();
+        });
+
+        $("input[name='searchTipo']").on("keyup", function () {
+          table.column(2).search(this.value).draw();
+        });
+
+        //delimiter
 
         $('#produtoCadastro').bootstrapValidator({
           // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
@@ -485,6 +522,19 @@
           $(".deleteProduto").empty().append(produtoNome);
         });
       });
+    </script>
+
+    <script>
+      function validate(e) {
+        var ev = e || window.event;
+        var key = ev.keyCode || ev.which;
+        key = String.fromCharCode( key );
+        var regex = /[0-9]/;
+        if( !regex.test(key) ) {
+          ev.returnValue = false;
+          if(ev.preventDefault) ev.preventDefault();
+        }
+      }
     </script>
   </body>
 </html>

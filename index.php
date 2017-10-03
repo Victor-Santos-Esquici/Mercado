@@ -50,7 +50,7 @@
     <div class="remodal" data-remodal-id="alertModal">
       <button data-remodal-action="close" class="remodal-close"></button>
       <h2>Aviso!</h2>
-      <p>Você precisa estar logado para gerenciar.</p>
+      <p>Você precisa estar logado para fazer esta operação.</p>
       <button data-remodal-action="confirm" class="remodal-confirm">OK</button>
     </div>
 

@@ -34,7 +34,12 @@
     $alertMessage = "";
 
     if (isset($_POST['vendaID'])) //delete
-    {      
+    {
+      if (!isset($_SESSION['usuarioID']) != "")
+      {
+        header("Location: index.php#alertModal");
+      }
+       
       $vendaID = $_POST['vendaID'];
 
       $consulta = $conexao->prepare("DELETE FROM vendas_itens WHERE vendaID = ?; DELETE FROM vendas WHERE ID = ?;");
