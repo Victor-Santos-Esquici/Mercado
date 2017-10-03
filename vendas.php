@@ -173,7 +173,7 @@
           window.location.href = window.location.pathname.replace("vendas.php", "") + "venda.php?id=" + $(this).parent().find('.vendaID').data("id");
         });
 
-        $(".vendaTotal").mask("00.000,00", {reverse: true});
+        $(".vendaTotal").mask("000.000.000.000.000,00", {reverse: true});
 
         //$(".vendaData").mask("dd/MM/yyyy");
 
